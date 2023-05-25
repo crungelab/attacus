@@ -15,7 +15,7 @@ set(SOURCES
 )
 
 add_library(${THIS} STATIC ${HEADERS} ${SOURCES})
-USES_ATT(${THIS})
+USES_ATTACUS(${THIS})
 
 add_subdirectory(basic)
 add_subdirectory(methodchannel)

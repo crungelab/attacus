@@ -2,7 +2,7 @@
 
 #include <attacus/shell/view_component.h>
 
-#include <attacus/flutter/flutter_embedder.h>
+#include <flutter_embedder.h>
 
 namespace attacus {
 

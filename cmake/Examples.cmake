@@ -5,7 +5,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Shell.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/Flutter.cmake)
 
 function(USES_EXAMPLES THIS)
-    USES_ATT(${THIS})
+    USES_ATTACUS(${THIS})
     USES_SHELL(${THIS})
     USES_FLUTTER(${THIS})
 
@@ -28,8 +28,8 @@ function(USES_EXAMPLES THIS)
     if(${ATT_PLATFORM_WINDOWS})
         add_custom_command(TARGET ${THIS} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${FLUTTER_OUT}/flutter_engine.dll"
-            #"${FLUTTER_OUT}/flutter_engine.dll.pdb"
+            "${FLUTTER_ENGINE}/flutter_engine.dll"
+            #"${FLUTTER_ENGINE}/flutter_engine.dll.pdb"
 
             $<TARGET_FILE_DIR:${THIS}>)
 

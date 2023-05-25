@@ -25,7 +25,7 @@ pybind11_add_module(${THIS} MODULE
 set_target_properties(${THIS} PROPERTIES OUTPUT_NAME ${MODULE})
 
 USES_PYBIND11(${THIS})
-USES_ATT(${THIS})
+USES_ATTACUS(${THIS})
 
 target_sources(${THIS} PRIVATE ${ATTPY_SOURCES})
 # add include files
@@ -43,7 +43,8 @@ install(TARGETS ${THIS} DESTINATION ${MODULE})
 #set_target_properties(${THIS} PROPERTIES
 #    LIBRARY_OUTPUT_DIRECTORY ${ATT_ROOT}/${MODULE})
 
-set (FLUTTER_DLL ${ATT_ROOT}/binaries/windows-x64-embedder/flutter_engine.dll)
+#set (FLUTTER_DLL ${ATT_ROOT}/binaries/windows-x64-embedder/flutter_engine.dll)
+set (FLUTTER_DLL ${ATT_ROOT}/depot/flutter-engine/flutter_engine.dll)
 #install(FILES ${FLUTTER_DLL} DESTINATION ${ATT_ROOT}/${MODULE})
 install(FILES ${FLUTTER_DLL} DESTINATION ${MODULE})
 #file(COPY ${FLUTTER_DLL} DESTINATION ${ATT_ROOT}/${MODULE})

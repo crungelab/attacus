@@ -16,11 +16,11 @@ set(GLM_ROOT ${ATT_ROOT}/depot/glm)
 
 set(SDL_ROOT ${ATT_ROOT}/depot/sdl)
 set(GLAD_ROOT ${ATT_ROOT}/src/glad)
-set(SOKOL_ROOT ${ATT_ROOT}/depot/sokol)
 
 set(FLUTTER_ROOT ${ATT_ROOT}/depot/engine/src) #TODO: Set as option where to find flutter repo
-#set(FLUTTER_OUT ${FLUTTER_ROOT}/out/host_debug_unopt)
-set(FLUTTER_OUT ${ATT_ROOT}/binaries/windows-x64-embedder)
+#set(FLUTTER_ENGINE ${FLUTTER_ROOT}/out/host_debug_unopt)
+#set(FLUTTER_ENGINE ${ATT_ROOT}/binaries/windows-x64-embedder)
+set(FLUTTER_ENGINE ${ATT_ROOT}/depot/flutter-engine)
 
 
 set(EXAMPLES_ROOT ${ATT_ROOT}/examples)

@@ -5,7 +5,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Shell.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/Sokol.cmake)
 
 function(USES_EXAMPLE_VIEWS THIS)
-    USES_ATT(${THIS})
+    USES_ATTACUS(${THIS})
     USES_SHELL(${THIS})
     USES_SOKOL(${THIS})
 

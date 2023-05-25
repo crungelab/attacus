@@ -1,6 +1,6 @@
 #pragma once
 
-#include <attacus/flutter/flutter_embedder.h>
+#include <flutter_embedder.h>
 
 #include "flutter_component.h"
 

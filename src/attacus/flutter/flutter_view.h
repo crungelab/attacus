@@ -3,10 +3,8 @@
 #include <nohlmann/json.hpp>
 using json = nlohmann::json;
 
-//#include <glad/gl.h>
-
 #include <attacus/shell/gfx_view.h>
-#include "flutter_embedder.h"
+#include <flutter_embedder.h>
 
 struct SDL_Window;
 struct SDL_Cursor;

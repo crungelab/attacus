@@ -1,23 +1,5 @@
-from procure import GitSolution
+from procure import GitSolution, ZipSolution
 
-"""
-[submodule "depot/sdl"]
-	path = depot/sdl
-	url = https://github.com/libsdl-org/SDL
-[submodule "depot/glad"]
-	path = depot/glad
-	url = https://github.com/Dav1dde/glad
-	branch = glad2
-[submodule "depot/googletest"]
-	path = depot/googletest
-	url = https://github.com/google/googletest
-[submodule "depot/glm"]
-	path = depot/glm
-	url = https://github.com/g-truc/glm
-[submodule "depot/pybind11"]
-	path = depot/pybind11
-	url = https://github.com/pybind/pybind11
-"""
 
 class GoogleTest(GitSolution):
 	path = 'depot/googletest'
@@ -39,10 +21,15 @@ class GLM(GitSolution):
 	path = 'depot/glm'
 	url = 'https://github.com/g-truc/glm'
 
+class FlutterEngine(ZipSolution):
+	path = 'depot/flutter-engine'
+	url = 'https://storage.googleapis.com/flutter_infra_release/flutter/90fa3ae28fe6ddaee1af2c120f01e50201c1401b/windows-x64/windows-x64-embedder.zip'
+
 solutions = [
 	GoogleTest,
     SDL,
     Glad,
     Pybind11,
-    GLM
+    GLM,
+    FlutterEngine
 ]
