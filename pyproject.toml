@@ -19,7 +19,8 @@ classifiers = [
 ]
 
 dependencies = [
-    "loguru ==0.7.0"
+    "loguru ==0.7.0",
+    "platformdirs ==3.5.1"
 ]
 
 #dynamic = ["version"]
