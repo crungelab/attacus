@@ -32,248 +32,248 @@ namespace fs = std::filesystem;
 #include "components/texture_registrar.h"
 #include "components/view_registry.h"
 
-
 namespace attacus
 {
 
-  FlutterView::FlutterView(View &parent, ViewParams params) : GfxView(parent, params)
-  {
-    messenger_ = new FlutterMessenger(*this);
-    runner_ = new FlutterRunner(*this);
-
-    compositor_ = new CompositorGL(*this);
-
-    isolate_ = new IsolateComponent(*this);
-    platform_ = new PlatformComponent(*this);
-    navigation_ = new NavigationComponent(*this);
-    cursor_ = new CursorComponent(*this);
-    mouseInput_ = new MouseInput(*this);
-    textInput_ = new TextInput(*this);
-
-    textureRegistrar_ = new TextureRegistrar(*this);
-    viewRegistry_ = new ViewRegistry(*this);
-
-    fs::path project_path = fs::current_path();
-    fs::path assets_path = project_path / "build" / "flutter_assets";
-    fs::path icu_data_path = project_path / "build" / "icudtl.dat";
-    assets_path_ = assets_path.string();
-    icu_data_path_ = icu_data_path.string();
-  }
-
-  FlutterView::~FlutterView()
-  {
-  }
-
-  void FlutterView::CreateGfx()
-  {
-    GfxView::CreateGfx();
-
-    resource_context_ = CreateContext();
-    if (resource_context_ == NULL)
+    FlutterView::FlutterView(View &parent, FlutterConfig &config, ViewParams params) : GfxView(parent, params)
     {
-      std::cout << std::format("Can't create opengl context for resource window: {}\n", SDL_GetError());
-      return;
+        config_ = &config;
+        messenger_ = new FlutterMessenger(*this);
+        runner_ = new FlutterRunner(*this);
+
+        compositor_ = new CompositorGL(*this);
+
+        isolate_ = new IsolateComponent(*this);
+        platform_ = new PlatformComponent(*this);
+        navigation_ = new NavigationComponent(*this);
+        cursor_ = new CursorComponent(*this);
+        mouseInput_ = new MouseInput(*this);
+        textInput_ = new TextInput(*this);
+
+        textureRegistrar_ = new TextureRegistrar(*this);
+        viewRegistry_ = new ViewRegistry(*this);
+
+        /*fs::path project_path = fs::current_path();
+        fs::path assets_path = project_path / "build" / "flutter_assets";
+        fs::path icu_data_path = project_path / "build" / "icudtl.dat";
+        assets_path_ = assets_path.string();
+        icu_data_path_ = icu_data_path.string();*/
     }
 
-    context_ = CreateContext();
-    if (context_ == NULL)
+    FlutterView::~FlutterView()
     {
-      std::cout << std::format("Can't create opengl context: {}\n", SDL_GetError());
-      return;
     }
 
-    // gl_proc_resolver = (GLADloadfunc)SDL_GL_GetProcAddress;
-    // int version = gladLoadGL(gl_proc_resolver);
-    // std::cout << std::format("OpenGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+    void FlutterView::CreateGfx()
+    {
+        GfxView::CreateGfx();
 
-    SDL_GL_MakeCurrent(sdl_window_, nullptr);
-  }
+        resource_context_ = CreateContext();
+        if (resource_context_ == NULL)
+        {
+            std::cout << std::format("Can't create opengl context for resource window: {}\n", SDL_GetError());
+            return;
+        }
 
-  void FlutterView::InitRendererConfig(FlutterRendererConfig &config)
-  {
-    config.type = kOpenGL;
-    config.open_gl.struct_size = sizeof(config.open_gl);
-    config.open_gl.make_current = [](void *userdata) -> bool
-    {
-      FlutterView &self = *static_cast<FlutterView *>(userdata);
-      auto window = self.sdl_window_;
-      SDL_GL_MakeCurrent(window, self.context_);
-      return true;
-    };
-    config.open_gl.make_resource_current = [](void *userdata) -> bool
-    {
-      FlutterView &self = *static_cast<FlutterView *>(userdata);
-      auto window = self.sdl_window_;
-      SDL_GL_MakeCurrent(window, self.resource_context_);
-      return true;
-    };
-    config.open_gl.clear_current = [](void *userdata) -> bool
-    {
-      FlutterView &self = *static_cast<FlutterView *>(userdata);
-      auto window = self.sdl_window_;
-      SDL_GL_MakeCurrent(window, nullptr);
-      return true;
-    };
-    config.open_gl.present = [](void *userdata) -> bool
-    {
-      FlutterView &self = *static_cast<FlutterView *>(userdata);
-      auto window = self.sdl_window_;
-      SDL_GL_SwapWindow(window); // TODO:This presents a problem if the view is embedded
-      return true;
-    };
-    config.open_gl.fbo_callback = [](void *userdata) -> uint32_t
-    {
-      return 0; // FBO0
-    };
-    // config.open_gl.fbo_reset_after_present = true;
-    // config.open_gl.fbo_reset_after_present = false;
+        context_ = CreateContext();
+        if (context_ == NULL)
+        {
+            std::cout << std::format("Can't create opengl context: {}\n", SDL_GetError());
+            return;
+        }
 
-    config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
-    {
-      FlutterView &self = *static_cast<FlutterView *>(userdata);
-      return self.gfx().gl_proc_resolver_(name);
-    };
+        // gl_proc_resolver = (GLADloadfunc)SDL_GL_GetProcAddress;
+        // int version = gladLoadGL(gl_proc_resolver);
+        // std::cout << std::format("OpenGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
-    config.open_gl.gl_external_texture_frame_callback =
-        [](void *userdata, int64_t texId, size_t width, size_t height, FlutterOpenGLTexture *texOut) -> bool
-    {
-      FlutterView &self = *static_cast<FlutterView *>(userdata);
-      return self.textureRegistrar().CopyTexture(texId, width, height, texOut);
-    };
-
-    config.open_gl.populate_existing_damage = nullptr;
-  }
-
-  void FlutterView::InitProjectArgs(FlutterProjectArgs &args)
-  {
-    /*fs::path project_path = fs::current_path();
-    fs::path assets_path = project_path / "build" / "flutter_assets";
-    fs::path icudtl_path = project_path / "build" / "icudtl.dat";
-    */
-    args.struct_size = sizeof(FlutterProjectArgs);
-    //args.assets_path = _strdup(assets_path.string().c_str());
-    args.assets_path = _strdup(assets_path_.c_str());
-    //args.icu_data_path = _strdup(icudtl_path.string().c_str());
-    args.icu_data_path = _strdup(icu_data_path_.c_str());
-    args.platform_message_callback = [](const FlutterPlatformMessage *message, void *user_data)
-    {
-      FlutterView &self = *static_cast<FlutterView *>(user_data);
-      self.messenger().Receive(*message);
-    };
-    args.custom_task_runners = &runner_->custom_task_runners;
-
-    args.compositor = compositor().InitCompositor();
-  }
-
-  void FlutterView::InitEngine(FlutterRendererConfig &config, FlutterProjectArgs &args)
-  {
-    FlutterEngineResult result = FlutterEngineInitialize(FLUTTER_ENGINE_VERSION, &config, &args, this, &engine_);
-    if (result != kSuccess || engine_ == nullptr)
-    {
-      std::cout << "Could not initialize the Flutter Engine." << std::endl;
-      return;
+        SDL_GL_MakeCurrent(sdl_window_, nullptr);
     }
-    engine_api_.struct_size = sizeof(FlutterEngineProcTable);
-    result = FlutterEngineGetProcAddresses(&engine_api_);
-    if (result != kSuccess)
+
+    void FlutterView::InitRendererConfig(FlutterRendererConfig &config)
     {
-      std::cout << "Could not get the Flutter Engine Procedure Table." << std::endl;
-      return;
+        config.type = kOpenGL;
+        config.open_gl.struct_size = sizeof(config.open_gl);
+        config.open_gl.make_current = [](void *userdata) -> bool
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            auto window = self.sdl_window_;
+            SDL_GL_MakeCurrent(window, self.context_);
+            return true;
+        };
+        config.open_gl.make_resource_current = [](void *userdata) -> bool
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            auto window = self.sdl_window_;
+            SDL_GL_MakeCurrent(window, self.resource_context_);
+            return true;
+        };
+        config.open_gl.clear_current = [](void *userdata) -> bool
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            auto window = self.sdl_window_;
+            SDL_GL_MakeCurrent(window, nullptr);
+            return true;
+        };
+        config.open_gl.present = [](void *userdata) -> bool
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            auto window = self.sdl_window_;
+            SDL_GL_SwapWindow(window); // TODO:This presents a problem if the view is embedded
+            return true;
+        };
+        config.open_gl.fbo_callback = [](void *userdata) -> uint32_t
+        {
+            return 0; // FBO0
+        };
+        // config.open_gl.fbo_reset_after_present = true;
+        // config.open_gl.fbo_reset_after_present = false;
+
+        config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            return self.gfx().gl_proc_resolver_(name);
+        };
+
+        config.open_gl.gl_external_texture_frame_callback =
+            [](void *userdata, int64_t texId, size_t width, size_t height, FlutterOpenGLTexture *texOut) -> bool
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            return self.textureRegistrar().CopyTexture(texId, width, height, texOut);
+        };
+
+        config.open_gl.populate_existing_damage = nullptr;
     }
-  }
 
-  void FlutterView::Create()
-  {
-    GfxView::Create();
-
-    FlutterRendererConfig config = {};
-    InitRendererConfig(config);
-    FlutterProjectArgs args = {};
-    InitProjectArgs(args);
-
-    InitEngine(config, args);
-
-    messenger().Create();
-    runner().Create();
-
-    compositor().Create();
-
-    isolate().Create();
-    platform().Create();
-    navigation().Create();
-    cursor().Create();
-    mouseInput().Create();
-    textInput().Create();
-
-    textureRegistrar().Create();
-    viewRegistry().Create();
-
-    FlutterEngineResult result = FlutterEngineRunInitialized(engine_);
-    if (result != kSuccess || engine_ == nullptr)
+    void FlutterView::InitProjectArgs(FlutterProjectArgs &args)
     {
-      std::cout << "Could not run the Flutter Engine." << std::endl;
-      return;
+        /*fs::path project_path = fs::current_path();
+        fs::path assets_path = project_path / "build" / "flutter_assets";
+        fs::path icudtl_path = project_path / "build" / "icudtl.dat";
+        */
+        args.struct_size = sizeof(FlutterProjectArgs);
+        // args.assets_path = _strdup(assets_path.string().c_str());
+        args.assets_path = _strdup(config().assets_path_.c_str());
+        // args.icu_data_path = _strdup(icudtl_path.string().c_str());
+        args.icu_data_path = _strdup(config().icu_data_path_.c_str());
+        args.platform_message_callback = [](const FlutterPlatformMessage *message, void *user_data)
+        {
+            FlutterView &self = *static_cast<FlutterView *>(user_data);
+            self.messenger().Receive(*message);
+        };
+        args.custom_task_runners = &runner_->custom_task_runners;
+
+        args.compositor = compositor().InitCompositor();
     }
-  }
 
-  void FlutterView::Destroy()
-  {
-    FlutterEngineResult result = FlutterEngineDeinitialize(engine_);
-    Shutdown();
-    GfxView::Destroy();
-  }
+    void FlutterView::InitEngine(FlutterRendererConfig &config, FlutterProjectArgs &args)
+    {
+        FlutterEngineResult result = FlutterEngineInitialize(FLUTTER_ENGINE_VERSION, &config, &args, this, &engine_);
+        if (result != kSuccess || engine_ == nullptr)
+        {
+            std::cout << "Could not initialize the Flutter Engine." << std::endl;
+            return;
+        }
+        engine_api_.struct_size = sizeof(FlutterEngineProcTable);
+        result = FlutterEngineGetProcAddresses(&engine_api_);
+        if (result != kSuccess)
+        {
+            std::cout << "Could not get the Flutter Engine Procedure Table." << std::endl;
+            return;
+        }
+    }
 
-  void FlutterView::OnResize(SDL_Event &event)
-  {
-    GfxView::OnResize(event);
-    // UpdateSize(event.window.data1, event.window.data2, 1.0, false);
-    UpdateSize();
-  }
+    void FlutterView::Create()
+    {
+        GfxView::Create();
 
-  void FlutterView::OnSize()
-  {
-    GfxView::OnSize();
-    // UpdateSize(width(), height(), 1.0, false);
-    UpdateSize();
-  }
+        FlutterRendererConfig config = {};
+        InitRendererConfig(config);
+        FlutterProjectArgs args = {};
+        InitProjectArgs(args);
 
-  void FlutterView::OnShow()
-  {
-    GfxView::OnShow();
-    // UpdateSize(width(), height(), 1.0, false);
-    UpdateSize();
-  }
+        InitEngine(config, args);
 
-  void FlutterView::UpdateSize()
-  {
-    int w, h;
-    SDL_GetWindowSize(sdl_window_, &w, &h);
-    printf("Window size: width=%i, height=%i\n", w, h);
-    int pw, ph;
-    SDL_GetWindowSizeInPixels(sdl_window_, &pw, &ph);
-    printf("Window size in pixels: width=%i, height=%i\n", pw, ph);
+        messenger().Create();
+        runner().Create();
 
-    //pixelRatio_ = (float)pw / (float)w;
-    //pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_);
-    pixelRatio_ = 1.25f; //TODO: Something is wrong.  The screen is too small after updating SDL :(
-    printf("Pixel ratio: %f\n", pixelRatio_);
+        compositor().Create();
 
-    FlutterWindowMetricsEvent event = {0};
-    event.struct_size = sizeof(event);
-    event.width = pw;
-    event.height = ph;
-    event.pixel_ratio = pixelRatio_;
+        isolate().Create();
+        platform().Create();
+        navigation().Create();
+        cursor().Create();
+        mouseInput().Create();
+        textInput().Create();
 
-    FlutterEngineSendWindowMetricsEvent(engine_, &event);
-    FlutterEngineScheduleFrame(engine_);
-  }
+        textureRegistrar().Create();
+        viewRegistry().Create();
 
-  bool FlutterView::Dispatch(SDL_Event &e)
-  {
-    mouseInput_->Dispatch(e);
-    textInput_->Dispatch(e);
+        FlutterEngineResult result = FlutterEngineRunInitialized(engine_);
+        if (result != kSuccess || engine_ == nullptr)
+        {
+            std::cout << "Could not run the Flutter Engine." << std::endl;
+            return;
+        }
+    }
 
-    return GfxView::Dispatch(e);
-  }
+    void FlutterView::Destroy()
+    {
+        FlutterEngineResult result = FlutterEngineDeinitialize(engine_);
+        Shutdown();
+        GfxView::Destroy();
+    }
+
+    void FlutterView::OnResize(SDL_Event &event)
+    {
+        GfxView::OnResize(event);
+        // UpdateSize(event.window.data1, event.window.data2, 1.0, false);
+        UpdateSize();
+    }
+
+    void FlutterView::OnSize()
+    {
+        GfxView::OnSize();
+        // UpdateSize(width(), height(), 1.0, false);
+        UpdateSize();
+    }
+
+    void FlutterView::OnShow()
+    {
+        GfxView::OnShow();
+        // UpdateSize(width(), height(), 1.0, false);
+        UpdateSize();
+    }
+
+    void FlutterView::UpdateSize()
+    {
+        int w, h;
+        SDL_GetWindowSize(sdl_window_, &w, &h);
+        printf("Window size: width=%i, height=%i\n", w, h);
+        int pw, ph;
+        SDL_GetWindowSizeInPixels(sdl_window_, &pw, &ph);
+        printf("Window size in pixels: width=%i, height=%i\n", pw, ph);
+
+        // pixelRatio_ = (float)pw / (float)w;
+        // pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_);
+        pixelRatio_ = 1.25f; // TODO: Something is wrong.  The screen is too small after updating SDL :(
+        printf("Pixel ratio: %f\n", pixelRatio_);
+
+        FlutterWindowMetricsEvent event = {0};
+        event.struct_size = sizeof(event);
+        event.width = pw;
+        event.height = ph;
+        event.pixel_ratio = pixelRatio_;
+
+        FlutterEngineSendWindowMetricsEvent(engine_, &event);
+        FlutterEngineScheduleFrame(engine_);
+    }
+
+    bool FlutterView::Dispatch(SDL_Event &e)
+    {
+        mouseInput_->Dispatch(e);
+        textInput_->Dispatch(e);
+
+        return GfxView::Dispatch(e);
+    }
 
 } // namespace attacus

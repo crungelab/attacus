@@ -1,5 +1,6 @@
 [project]
 name = "attacus"
+#dynamic = ["version"]
 version = "0.1.0"
 description = 'Python Flutter Extension'
 readme = "README.md"
@@ -20,10 +21,9 @@ classifiers = [
 
 dependencies = [
     "loguru ==0.7.0",
-    "platformdirs ==3.5.1"
+    "platformdirs ==3.5.1",
+    "requests ==2.31.0"
 ]
-
-#dynamic = ["version"]
 
 [project.optional-dependencies]
 dev = ["black ~=22.12.0"]
@@ -35,6 +35,9 @@ documentation = "https://crungelab.github.io/attacus/"
 repository = "https://github.com/crungelab/attacus"
 changelog = "https://github.com/crungelab/attacus/blob/main/CHANGELOG.md"
 
+
+[tool.hatch.version]
+path = "attacus/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = ["pytest", "pytest-cov"]

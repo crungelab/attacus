@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
         "Test method channels.",
         "https://kfields.github.io/attacus/examples.html#methodchannel"
     ));
-    FlutterView& flutter = *ExampleMethodChannel::Produce<ExampleMethodChannel>(app);
+    FlutterConfig config;
+    FlutterView& flutter = *ExampleMethodChannel::Produce<ExampleMethodChannel>(app, config);
     return app.Run();
 }

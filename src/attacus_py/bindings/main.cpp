@@ -72,7 +72,7 @@ class PyFlutterView : public FlutterView {
 public:
     /* Inherit the constructors */
     using FlutterView::FlutterView;
-    PyFlutterView(View& parent, ViewParams params = ViewParams()) : FlutterView(parent) {}
+    PyFlutterView(View& parent, FlutterConfig& config, ViewParams params = ViewParams()) : FlutterView(parent, config) {}
     /* Trampoline (need one for each virtual function) */
     void Startup() override {
         PYMETHOD_OVERRIDE(
@@ -106,16 +106,22 @@ void init_main(py::module &attacus, Registry &registry) {
         .def("shutdown", &App::Shutdown)
     PYCLASS_END(attacus, App)
 
+    PYCLASS_BEGIN(attacus, FlutterConfig)
+        .def(py::init<>())
+        .def_readwrite("assets_path", &FlutterConfig::assets_path_)
+        .def_readwrite("icu_data_path", &FlutterConfig::icu_data_path_)
+    PYCLASS_END(attacus, FlutterConfig)
+
     //PYCLASS_BEGIN(attacus, FlutterView)
     PYCLASS_O_BEGIN(attacus, FlutterView, PyFlutterView)
-        .def(py::init<>([](App& parent){
-            return FlutterView::Produce<PyFlutterView>(parent);
+        .def(py::init<>([](App& parent, FlutterConfig& config){
+            return FlutterView::Produce<PyFlutterView>(parent, config);
         }))
         .def("startup", &FlutterView::Startup)
         .def("shutdown", &FlutterView::Shutdown)
         .def_readonly("messenger", &FlutterView::messenger_)
-        .def_readwrite("assets_path", &FlutterView::assets_path_)
-        .def_readwrite("icu_data_path", &FlutterView::icu_data_path_)
+        //.def_readwrite("assets_path", &FlutterView::assets_path_)
+        //.def_readwrite("icu_data_path", &FlutterView::icu_data_path_)
     PYCLASS_END(attacus, FlutterView)
 
     PYCLASS_BEGIN(attacus, FlutterMessenger)
@@ -201,10 +207,6 @@ void init_main(py::module &attacus, Registry &registry) {
             //, py::arg("result") = nullptr
             , py::return_value_policy::automatic_reference
         )
-
-
-
-
     PYCLASS_END(attacus, StandardMethodChannel)
    
 }

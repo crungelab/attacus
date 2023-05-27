@@ -5,6 +5,7 @@ using json = nlohmann::json;
 
 #include <attacus/shell/gfx_view.h>
 #include <flutter_embedder.h>
+#include "flutter_config.h"
 
 struct SDL_Window;
 struct SDL_Cursor;
@@ -29,11 +30,11 @@ class ViewRegistry;
 
 class FlutterView : public GfxView {
 public:
-    FlutterView(View& parent, ViewParams params = ViewParams());
+    FlutterView(View& parent, FlutterConfig& config, ViewParams params = ViewParams());
 
     template<typename T = FlutterView>
-    static T* Produce(View& parent, ViewParams params = ViewParams()) {
-        T* c = new T(parent, params);
+    static T* Produce(View& parent, FlutterConfig& config, ViewParams params = ViewParams()) {
+        T* c = new T(parent, config, params);
         c->Create();
         return c;
     }
@@ -57,6 +58,7 @@ public:
     //void UpdateSize(size_t width, size_t height, float pixelRatio, bool maximized);
     void UpdateSize();
     //Accessors
+    FlutterConfig& config() { return *config_; }
     FlutterEngine& engine() { return engine_; }
     FlutterMessenger& messenger() { return *messenger_; }
     FlutterRunner& runner() { return *runner_; }
@@ -76,9 +78,10 @@ public:
     void* resource_context_ = nullptr;
     //
     float pixelRatio_ = 1.0f;
-    std::string assets_path_;
-    std::string icu_data_path_;
+    //std::string assets_path_;
+    //std::string icu_data_path_;
     //
+    FlutterConfig* config_ = nullptr;
     FlutterEngine engine_ = nullptr;
     FlutterEngineProcTable engine_api_{0};
     FlutterMessenger* messenger_ = nullptr;

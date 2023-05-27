@@ -38,27 +38,16 @@ target_include_directories(${THIS}
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-#install(TARGETS ${THIS} LIBRARY DESTINATION ${ATT_ROOT}/${MODULE})
 install(TARGETS ${THIS} DESTINATION ${MODULE})
-#set_target_properties(${THIS} PROPERTIES
-#    LIBRARY_OUTPUT_DIRECTORY ${ATT_ROOT}/${MODULE})
 
-#set (FLUTTER_DLL ${ATT_ROOT}/binaries/windows-x64-embedder/flutter_engine.dll)
-set (FLUTTER_DLL ${ATT_ROOT}/depot/flutter-engine/flutter_engine.dll)
-#install(FILES ${FLUTTER_DLL} DESTINATION ${ATT_ROOT}/${MODULE})
-install(FILES ${FLUTTER_DLL} DESTINATION ${MODULE})
-#file(COPY ${FLUTTER_DLL} DESTINATION ${ATT_ROOT}/${MODULE})
+#set (FLUTTER_DLL ${ATT_ROOT}/depot/flutter-engine/flutter_engine.dll)
+#install(FILES ${FLUTTER_DLL} DESTINATION ${MODULE})
 
 # Get the FLUTTER_ROOT environment variable
-#set(FLUTTER_ROOT $ENV{FLUTTER_ROOT})
-file(TO_CMAKE_PATH $ENV{FLUTTER_ROOT} FLUTTER_ROOT)
+#file(TO_CMAKE_PATH $ENV{FLUTTER_ROOT} FLUTTER_ROOT)
 
 # Set the path to icudtl.dat
-set(ICU_DATA ${FLUTTER_ROOT}/bin/cache/artifacts/engine/windows-x64/icudtl.dat)
+#set(ICU_DATA ${FLUTTER_ROOT}/bin/cache/artifacts/engine/windows-x64/icudtl.dat)
 
 # Install icudtl.dat to the same directory as your .pyd file
-#install(FILES ${ICU_DATA} DESTINATION ${ATT_ROOT}/${MODULE})
-install(FILES ${ICU_DATA} DESTINATION ${MODULE})
-#file(COPY ${ICU_DATA} DESTINATION ${ATT_ROOT}/${MODULE})
-
-#TODO: Getting: SKBuildInvalidFileInstallationError: CMake-installed files must be within the project root.
+#install(FILES ${ICU_DATA} DESTINATION ${MODULE})
