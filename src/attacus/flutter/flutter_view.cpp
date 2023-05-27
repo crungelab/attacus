@@ -146,14 +146,8 @@ namespace attacus
 
     void FlutterView::InitProjectArgs(FlutterProjectArgs &args)
     {
-        /*fs::path project_path = fs::current_path();
-        fs::path assets_path = project_path / "build" / "flutter_assets";
-        fs::path icudtl_path = project_path / "build" / "icudtl.dat";
-        */
         args.struct_size = sizeof(FlutterProjectArgs);
-        // args.assets_path = _strdup(assets_path.string().c_str());
         args.assets_path = _strdup(config().assets_path_.c_str());
-        // args.icu_data_path = _strdup(icudtl_path.string().c_str());
         args.icu_data_path = _strdup(config().icu_data_path_.c_str());
         args.platform_message_callback = [](const FlutterPlatformMessage *message, void *user_data)
         {
@@ -226,21 +220,18 @@ namespace attacus
     void FlutterView::OnResize(SDL_Event &event)
     {
         GfxView::OnResize(event);
-        // UpdateSize(event.window.data1, event.window.data2, 1.0, false);
         UpdateSize();
     }
 
     void FlutterView::OnSize()
     {
         GfxView::OnSize();
-        // UpdateSize(width(), height(), 1.0, false);
         UpdateSize();
     }
 
     void FlutterView::OnShow()
     {
         GfxView::OnShow();
-        // UpdateSize(width(), height(), 1.0, false);
         UpdateSize();
     }
 
@@ -255,7 +246,8 @@ namespace attacus
 
         // pixelRatio_ = (float)pw / (float)w;
         // pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_);
-        pixelRatio_ = 1.25f; // TODO: Something is wrong.  The screen is too small after updating SDL :(
+        // pixelRatio_ = 1.25f; // TODO: Something is wrong.  The screen is too small after updating SDL :(
+        pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_) * zoom_ ;
         printf("Pixel ratio: %f\n", pixelRatio_);
 
         FlutterWindowMetricsEvent event = {0};

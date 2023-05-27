@@ -77,9 +77,8 @@ public:
     void* context_ = nullptr;
     void* resource_context_ = nullptr;
     //
+    float zoom_ = 1.25f;
     float pixelRatio_ = 1.0f;
-    //std::string assets_path_;
-    //std::string icu_data_path_;
     //
     FlutterConfig* config_ = nullptr;
     FlutterEngine engine_ = nullptr;
