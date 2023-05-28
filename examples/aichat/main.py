@@ -1,5 +1,7 @@
+import os
 import inspect
 import asyncio
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -7,12 +9,14 @@ load_dotenv()  # take environment variables from .env.
 
 from loguru import logger
 
+# This needs to be set before the first import of attacus
+os.environ['FLUTTER_ASSETS'] = str(Path(__file__).parent / 'flutter_assets')
+from attacus import App, FlutterView, StandardMethodChannel, StandardMethod
+
 #import google.generativeai as palm
 from langchain.chat_models import ChatOpenAI, ChatGooglePalm
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
-
-from attacus import App, FlutterView, StandardMethodChannel, StandardMethod
 
 #chat: palm.types.ChatResponse = None
 

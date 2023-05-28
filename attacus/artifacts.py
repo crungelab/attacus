@@ -2,6 +2,7 @@ import os
 import requests
 import tempfile
 import zipfile
+import json
 
 from loguru import logger
 
@@ -40,15 +41,23 @@ def ensure_artifacts(version: str) -> None:
 
 def get_engine_version() -> str:
     #version = '90fa3ae28fe6ddaee1af2c120f01e50201c1401b'
-    version = os.environ.get('FLUTTER_ENGINE_VERSION')
-    if not version:
+    version = None
+    flutter_assets = os.environ.get('FLUTTER_ASSETS')
+    if flutter_assets:
+        logger.debug(f'loading engine version from {flutter_assets}')
+        engine_data_path = Path(flutter_assets) / 'Engine.json'
+        with open(engine_data_path, 'r') as f:
+            engine_data = json.load(f)
+            version = engine_data['version']
+    else:
         flutter_root = os.environ.get('FLUTTER_ROOT')
         if not flutter_root:
             return None
+        logger.debug(f'loading engine version from sdk')
         version_path = flutter_root / Path('bin/internal/engine.version')
         with open(version_path, 'r') as file:
             version = file.readline().rstrip()
-    #logger.debug(version)
+    logger.debug(version)
     return version
 
 def download_file(url: str):
