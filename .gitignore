@@ -68,13 +68,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Attacus related
-icudtl.dat
+# Procure
+depot
 
 # CxBuild
 _cxbuild
 _cxinstall
-
-depot
-tmp
-temp

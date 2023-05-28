@@ -8,7 +8,7 @@ using namespace attacus;
 
 class ExampleMethodChannel : public FlutterView {
 public:
-    ExampleMethodChannel(View& parent, ViewParams params = ViewParams()) : FlutterView(parent, params) {}
+    ExampleMethodChannel(View& parent, FlutterConfig& config, ViewParams params = ViewParams()) : FlutterView(parent, config, params) {}
 
     int counter_ = 0;
 

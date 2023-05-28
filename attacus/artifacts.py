@@ -21,7 +21,7 @@ def ensure() -> None:
 
 def ensure_engine(version: str) -> None:
     path = Path(user_cache_dir(appname, appauthor)) / 'flutter' / version / 'engine'
-    logger.debug(path)
+    #logger.debug(path)
     if not path.exists():
         url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/windows-x64/windows-x64-embedder.zip'
         zip_file = download_file(url)
@@ -32,7 +32,7 @@ def ensure_engine(version: str) -> None:
 
 def ensure_artifacts(version: str) -> None:
     path = Path(user_cache_dir(appname, appauthor)) / 'flutter' / version / 'artifacts'
-    logger.debug(path)
+    #logger.debug(path)
     if not path.exists():
         url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/windows-x64/artifacts.zip'
         zip_file = download_file(url)
@@ -48,7 +48,7 @@ def get_engine_version() -> str:
         version_path = flutter_root / Path('bin/internal/engine.version')
         with open(version_path, 'r') as file:
             version = file.readline().rstrip()
-    logger.debug(version)
+    #logger.debug(version)
     return version
 
 def download_file(url: str):

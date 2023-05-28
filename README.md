@@ -67,14 +67,20 @@ Add this to your .flutter_custom_devices.json file
         "localhost"
       ],
       "pingSuccessRegex": "[<=]\\d+ms",
-      "postBuild": null,
+      "postBuild": [
+        "python",
+        "-m",
+        "attacus.post_build"
+      ],
       "install": [
         "python",
-        "--version"
+        "-m",
+        "attacus.install"
       ],
       "uninstall": [
         "python",
-        "--version"
+        "-m",
+        "attacus.uninstall"
       ],
       "runDebug": [
         "python",

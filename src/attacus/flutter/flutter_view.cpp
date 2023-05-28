@@ -52,12 +52,6 @@ namespace attacus
 
         textureRegistrar_ = new TextureRegistrar(*this);
         viewRegistry_ = new ViewRegistry(*this);
-
-        /*fs::path project_path = fs::current_path();
-        fs::path assets_path = project_path / "build" / "flutter_assets";
-        fs::path icu_data_path = project_path / "build" / "icudtl.dat";
-        assets_path_ = assets_path.string();
-        icu_data_path_ = icu_data_path.string();*/
     }
 
     FlutterView::~FlutterView()
@@ -81,10 +75,6 @@ namespace attacus
             std::cout << std::format("Can't create opengl context: {}\n", SDL_GetError());
             return;
         }
-
-        // gl_proc_resolver = (GLADloadfunc)SDL_GL_GetProcAddress;
-        // int version = gladLoadGL(gl_proc_resolver);
-        // std::cout << std::format("OpenGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
         SDL_GL_MakeCurrent(sdl_window_, nullptr);
     }
