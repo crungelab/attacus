@@ -5,7 +5,7 @@ build-backend = "cxbuild.backend"
 [project]
 name = "attacus"
 #dynamic = ["version"]
-version = "0.1.4"
+version = "0.1.5"
 description = 'Python Flutter Extension'
 readme = "README.md"
 requires-python = ">=3.8"
@@ -27,12 +27,16 @@ dependencies = [
     "loguru ~=0.7.0",
     "platformdirs ~=3.5.1",
     "requests ~=2.31.0",
-    "rich ~=13.3.5"
+    "rich ~=13.3.5",
+    "click ~=8.1.3"
 ]
 
 [project.optional-dependencies]
 dev = ["black ~=22.12.0"]
 test = ["pytest ~=7.2.1"]
+
+[project.scripts]
+attacus = 'attacus.cli:cli'
 
 [project.urls]
 homepage = "https://github.com/crunge/attacus"
