@@ -88,63 +88,51 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Scrollbar(
+        thumbVisibility: true,
+        controller: _scrollController,
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: _messages.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                child: ListTile(
+                    leading: CircleAvatar(
+                      child: _messages[index].avatar,
+                    ),
+                    title: _messages[index].isWaiting
+                        ? const Center(child: DotLoadingIndicator())
+                        : MarkdownBody(
+                            key: const Key("defaultmarkdownformatter"),
+                            data: _messages[index].text,
+                            selectable: true,
+                            extensionSet: md.ExtensionSet(
+                              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                              [
+                                md.EmojiSyntax(),
+                                ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+                              ],
+                            ),
+                            builders: {
+                                'code': CodeElementBuilder(context: context),
+                              })),
+              ),
+            );
+          },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Expanded(
-              child: Center(
-                child: Scrollbar(
-                  thumbVisibility: true,
-                  controller: _scrollController,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          child: ListTile(
-                              leading: CircleAvatar(
-                                child: _messages[index].avatar,
-                              ),
-                              title: _messages[index].isWaiting
-                                  ? const Center(child: DotLoadingIndicator())
-                                  : MarkdownBody(
-                                      key:
-                                          const Key("defaultmarkdownformatter"),
-                                      data: _messages[index].text,
-                                      selectable: true,
-                                      extensionSet: md.ExtensionSet(
-                                        md.ExtensionSet.gitHubFlavored
-                                            .blockSyntaxes,
-                                        [
-                                          md.EmojiSyntax(),
-                                          ...md.ExtensionSet.gitHubFlavored
-                                              .inlineSyntaxes
-                                        ],
-                                      ),
-                                      builders: {
-                                          'code': CodeElementBuilder(
-                                              context: context),
-                                        })),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              //color: Colors.blue[200],
               child: TextField(
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),

@@ -40,9 +40,10 @@ class DotLoadingIndicatorState extends State<DotLoadingIndicator>
             child: Container(
               width: 10.0,
               height: 10.0,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.blue,
+                //color: Colors.blue,
+                color: Theme.of(context).colorScheme.inversePrimary,
               ),
             ),
           ),
