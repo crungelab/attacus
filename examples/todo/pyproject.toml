@@ -1,0 +1,17 @@
+[project]
+name = "todo"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Kurtis Fields", email = "kurtisfields@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "loguru ==0.7.0",
+    "protobuf ~=4.23.2"
+]
+
+[tool.setuptools]
+packages=["todo"]
+
+[tool.attacus]
+flutter_assets = "todo/flutter_assets"

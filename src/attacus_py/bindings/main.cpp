@@ -16,6 +16,21 @@ namespace py = pybind11;
 
 using namespace attacus;
 
+// The variant types are mapped with Dart types in following ways:
+// std::monostate       -> null
+// bool                 -> bool
+// int32_t              -> int
+// int64_t              -> int
+// double               -> double
+// std::string          -> String
+// std::vector<uint8_t> -> Uint8List
+// std::vector<int32_t> -> Int32List
+// std::vector<int64_t> -> Int64List
+// std::vector<float>   -> Float32List
+// std::vector<double>  -> Float64List
+// EncodableList        -> List
+// EncodableMap         -> Map
+
 template<class T>
 struct always_false : std::false_type {};
 
@@ -32,6 +47,15 @@ EncodableValue encode(py::object obj) {
     else if (PyUnicode_Check(object)) {
         auto val = PyUnicode_AsUTF8(object);
         value = val;
+    }
+    else if (PyBytes_Check(object)) {
+        // Get size and pointer to data
+        Py_ssize_t size = PyBytes_Size(object);
+        char* data = PyBytes_AsString(object);
+
+        // Convert to std::vector<uint8_t>
+        std::vector<uint8_t> result(data, data + size);
+        value = result;
     }
     return value;
 }
@@ -160,10 +184,20 @@ void init_main(py::module &attacus, Registry &registry) {
             if (Py_IsNone(object)) {
                 return self.Success();
             }
-            if (PyLong_Check(object)) {
+            else if (PyLong_Check(object)) {
                 int64_t val = PyLong_AsLong(object);
                 return self.Success(val);
             }
+            else if (PyBytes_Check(object)) {
+                // Get size and pointer to data
+                Py_ssize_t size = PyBytes_Size(object);
+                char* data = PyBytes_AsString(object);
+
+                // Convert to std::vector<uint8_t>
+                std::vector<uint8_t> val(data, data + size);
+                return self.Success(val);
+            }
+
         }
         , py::arg("value") = nullptr
         )
@@ -181,6 +215,8 @@ void init_main(py::module &attacus, Registry &registry) {
                         return py::float_(arg);
                     } else if constexpr (std::is_same_v<T, std::string>) {
                         return py::str(arg);
+                    } else if constexpr (std::is_same_v<T, std::vector<uint8_t>>) {
+                        return py::bytes((char*)arg.data(), arg.size());
                     } else {
                         //static_assert(always_false<T>::value, "non-exhaustive visitor!");
                         return py::none();

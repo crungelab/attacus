@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package todo;
+
+message TodoItem {
+  string id = 1;
+  string title = 2;
+  bool isDone = 3;
+}
+
+message TodoItems {
+  repeated TodoItem items = 1;
+}
