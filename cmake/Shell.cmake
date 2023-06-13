@@ -1,7 +1,6 @@
 include_guard()
 
 include(${CMAKE_CURRENT_LIST_DIR}/Sdl.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/Sokol.cmake)
 
 if(${ATT_PLATFORM_WINDOWS})
     set(SHELL_HEADER "<attacus/shell/platform/windows/win32_window.h>")
@@ -18,7 +17,6 @@ endif()
 
 function(USES_SHELL THIS)
     USES_SDL(${THIS})
-    USES_SOKOL(${THIS})
 
     target_compile_definitions(${THIS} PRIVATE SHELL_HEADER=${SHELL_HEADER} SHELL_CLASS=${SHELL_CLASS})
     target_link_libraries(${THIS} PRIVATE AttShell AttShell${CMAKE_SYSTEM_NAME})

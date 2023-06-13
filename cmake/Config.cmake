@@ -11,6 +11,7 @@ set(ATT_STATIC_PIC ON)
 #
 set(ATT_ROOT ${CMAKE_SOURCE_DIR})
 
+set(SPDLOG_ROOT ${ATT_ROOT}/depot/spdlog)
 set(PYBIND11_ROOT ${ATT_ROOT}/depot/pybind11)
 set(GLM_ROOT ${ATT_ROOT}/depot/glm)
 
@@ -18,8 +19,6 @@ set(SDL_ROOT ${ATT_ROOT}/depot/sdl)
 set(GLAD_ROOT ${ATT_ROOT}/src/glad)
 
 set(FLUTTER_ROOT ${ATT_ROOT}/depot/engine/src) #TODO: Set as option where to find flutter repo
-#set(FLUTTER_ENGINE ${FLUTTER_ROOT}/out/host_debug_unopt)
-#set(FLUTTER_ENGINE ${ATT_ROOT}/binaries/windows-x64-embedder)
 set(FLUTTER_ENGINE ${ATT_ROOT}/depot/flutter-engine)
 
 
@@ -92,7 +91,6 @@ endif()
 set(HAS_APP 1)
 set(HAS_SHELL 1)
 set(HAS_FLUTTER 1)
-set(HAS_BGFX 1)
 set(HAS_PYBIND11 1)
 set(HAS_SDL 1)
 set(HAS_GLAD 1)

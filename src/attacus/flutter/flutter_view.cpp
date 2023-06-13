@@ -8,6 +8,8 @@ namespace fs = std::filesystem;
 #include <string>
 #include <format>
 
+#include <spdlog/spdlog.h>
+
 #include <SDL.h>
 #include <SDL_syswm.h>
 
@@ -229,16 +231,16 @@ namespace attacus
     {
         int w, h;
         SDL_GetWindowSize(sdl_window_, &w, &h);
-        printf("Window size: width=%i, height=%i\n", w, h);
+        //printf("Window size: width=%i, height=%i\n", w, h);
         int pw, ph;
         SDL_GetWindowSizeInPixels(sdl_window_, &pw, &ph);
-        printf("Window size in pixels: width=%i, height=%i\n", pw, ph);
+        //printf("Window size in pixels: width=%i, height=%i\n", pw, ph);
 
         // pixelRatio_ = (float)pw / (float)w;
         // pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_);
         // pixelRatio_ = 1.25f; // TODO: Something is wrong.  The screen is too small after updating SDL :(
         pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_) * zoom_ ;
-        printf("Pixel ratio: %f\n", pixelRatio_);
+        //printf("Pixel ratio: %f\n", pixelRatio_);
 
         FlutterWindowMetricsEvent event = {0};
         event.struct_size = sizeof(event);

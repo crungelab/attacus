@@ -2,6 +2,8 @@
 #include <iostream>
 #include <variant>
 
+#include <spdlog/spdlog.h>
+
 #include "flutter_embedder.h"
 #include "flutter_messenger.h"
 #include "flutter_view.h"
@@ -85,7 +87,7 @@ FlutterEngineResult FlutterEngineSendPlatformMessageResponse(
 
 void FlutterMessenger::Receive(const FlutterPlatformMessage &message)
 {
-    std::cout << "received message on:  " << message.channel << std::endl;
+    spdlog::debug("Received message on: {}", message.channel);
 
     auto *response_handle = message.response_handle;
     BinaryReply reply_handler = [this, response_handle](
@@ -104,7 +106,7 @@ void FlutterMessenger::Receive(const FlutterPlatformMessage &message)
 
     if (channels_.find(message.channel) == channels_.end())
     {
-        std::cout << "Channel does not exist: " << message.channel << std::endl;
+        spdlog::debug("Channel does not exist: {}", message.channel);
         return;
     }
     channels_[message.channel]->HandleMessage(message, reply_handler);

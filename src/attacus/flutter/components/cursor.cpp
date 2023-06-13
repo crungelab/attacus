@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <spdlog/spdlog.h>
+
 #include <attacus/flutter/encodable_value.h>
 #include <attacus/flutter/flutter_view.h>
 #include <attacus/flutter/standard_method_channel.h>
@@ -54,7 +56,8 @@ void CursorComponent::Create()
                 return;
                 }
                 const auto& kind = std::get<std::string>(kind_iter->second);
-                std::cout << "activateSystemCursor: "  << kind << std::endl;
+                //std::cout << "activateSystemCursor: "  << kind << std::endl;
+                spdlog::debug("activateSystemCursor: {}", kind);
                 delegates_[kind]();
                 result->Success();
             });

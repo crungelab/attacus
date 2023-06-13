@@ -4,6 +4,9 @@
 
 #include <iostream>
 #include <string>
+
+#include <spdlog/spdlog.h>
+
 #include "json_message_codec.h"
 #include "json.h"
 
@@ -33,7 +36,8 @@ std::unique_ptr<JsonValue> JsonMessageCodec::DecodeMessageInternal(
 
     auto raw_message = reinterpret_cast<const char *>(binary_message);
     auto json_message = JsonValue::parse(raw_message, raw_message + message_size);
-    std::cout << json_message;
+    //std::cout << json_message;
+    spdlog::debug("JsonMessageCodec::DecodeMessageInternal: {}", json_message.dump());
 
     return std::make_unique<JsonValue>(json_message);
 }

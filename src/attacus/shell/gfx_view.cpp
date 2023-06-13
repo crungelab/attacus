@@ -67,9 +67,8 @@ namespace attacus
     if (!gfx_context_)
     {
       gfx_context_ = CreateContext();
-      if (gfx_context_ == NULL)
+      if (gfx_context_ == nullptr)
       {
-        std::cout << std::format("Can't create opengl context for bgfx: {}\n", SDL_GetError());
         return;
       }
       InitGfx();

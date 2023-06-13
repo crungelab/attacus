@@ -5,6 +5,10 @@ class GoogleTest(GitSolution):
 	path = 'depot/googletest'
 	url = 'https://github.com/google/googletest'
 
+class Spdlog(GitSolution):
+	path = 'depot/spdlog'
+	url = 'https://github.com/gabime/spdlog'
+
 class SDL(GitSolution):
 	path = 'depot/sdl'
 	url = 'https://github.com/libsdl-org/SDL'
@@ -27,6 +31,7 @@ class FlutterEngine(ZipSolution):
 
 solutions = [
 	GoogleTest,
+	Spdlog,
     SDL,
     Glad,
     Pybind11,

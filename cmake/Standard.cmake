@@ -3,9 +3,11 @@ cmake_minimum_required(VERSION 3.14)
 include_guard()
 
 include(${CMAKE_CURRENT_LIST_DIR}/Config.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/Spdlog.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/Glm.cmake)
 
 function(USES_STD THIS)
+    USES_SPDLOG(${THIS})
     USES_GLM(${THIS})
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")

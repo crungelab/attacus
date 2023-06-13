@@ -86,6 +86,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(depot/googletest)
 
 #
+# spdlog
+#
+add_subdirectory(depot/spdlog)
+
+#
 #Tests
 #
 add_subdirectory(tests)
