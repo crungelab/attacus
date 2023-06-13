@@ -11,19 +11,15 @@ load_dotenv()  # take environment variables from .env.
 from loguru import logger
 
 # This needs to be set before the first import of attacus
-#os.environ['FLUTTER_ASSETS'] = str(Path(__file__).parent / 'flutter_assets')
 flutter_assets_path = Path(pkg_resources.files('aichat')) / 'flutter_assets'
 logger.debug(flutter_assets_path)
 os.environ['FLUTTER_ASSETS'] = str(flutter_assets_path)
 
 from attacus import App, FlutterView, StandardMethodChannel, StandardMethod
 
-#import google.generativeai as palm
 from langchain.chat_models import ChatOpenAI, ChatGooglePalm
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
-
-#chat: palm.types.ChatResponse = None
 
 llm = ChatGooglePalm()
 #llm = ChatOpenAI()
@@ -38,10 +34,12 @@ class MyChannel(StandardMethodChannel):
         super().__init__(messenger, name)
         self.receiver = receiver
         for key, value in self.routes.items():
+            def execute_method(method_call, result, value=value):
+                self.execute(method_call, value, result)
             StandardMethod(
                 self,
                 key,
-                lambda method_call, result: self.execute(method_call, value, result)
+                lambda method_call, result, execute_method=execute_method: execute_method(method_call, result)
             )
 
     @classmethod
@@ -51,7 +49,6 @@ class MyChannel(StandardMethodChannel):
             return f
         return decorator
 
-    """
     def execute(self, method_call, method, method_result):
         logger.debug(method_call)
         logger.debug(method)
@@ -62,20 +59,7 @@ class MyChannel(StandardMethodChannel):
 
         pyarg = args.decode()
         logger.debug(pyarg)
-        result = method(self.receiver, pyarg)
-        method_result.success(result)
-    """
-    def execute(self, method_call, method, method_result):
-        logger.debug(method_call)
-        logger.debug(method)
-        logger.debug(method_call.method_name())
-        args = method_call.arguments()
-        logger.debug(args)
-        logger.debug(method_result)
 
-        pyarg = args.decode()
-        logger.debug(pyarg)
-        #result = None
         if inspect.iscoroutinefunction(method):
             loop = asyncio.get_event_loop()
             def callback(future):
@@ -110,39 +94,35 @@ class MyFlutter(FlutterView):
 
     @MyChannel.route('send')
     async def send(self, text: str):
-        global chat
         logger.debug(text)
-        """
-        if not chat:
-            chat = palm.chat(messages=[text])
-            response = chat.last
-        else:
-            response = chat.reply(text)
-        """
-        #response = await chain.arun(text)
         try:
             response = await chain.arun(text)
-            response = response.replace('\n', '\r\n')
         except Exception as e:
-            print(f"An error occurred: {e}")
+            msg = f"An error occurred: {e}"
+            logger.error(msg)
+            response = msg
 
         self.channel.invoke_method('on_message', response)
 
 class MyApp(App):
     def __init__(self):
         super().__init__()
+        self.flutter = MyFlutter(self)
 
     def startup(self):
         super().startup()
         logger.debug("Starting up App ...")
 
     """
+    # Synchronous event loop
     def loop(self):
         logger.debug("Entering App Loop ...")
         while self.process_events():
             pass
         logger.debug("Exiting App Loop ...")
     """
+
+    # Asynchronous event loop
     def loop(self):
         logger.debug("Entering App Loop ...")
         def exception_handler(loop, context):
@@ -162,7 +142,4 @@ class MyApp(App):
 
 def main():
     app = MyApp()
-
-    flutter = MyFlutter(app)
-
     app.run()
