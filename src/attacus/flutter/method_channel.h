@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 
+#include <spdlog/spdlog.h>
+
 #include "channel.h"
 #include "method.h"
 
@@ -56,7 +58,8 @@ public:
         const std::string method_name = method_call->method_name();
         if (methods_.find(method_name) == methods_.end())
         {
-            std::cout << "Unknown Method: " << method_name << std::endl;
+            //std::cout << "Unknown Method: " << method_name << std::endl;
+            spdlog::debug("Unknown Method: {}", method_name);
             result->NotImplemented();
             return;
         }
