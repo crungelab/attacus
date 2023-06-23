@@ -13,7 +13,7 @@ class TextInputModel;
 class MouseInput : FlutterComponent {
 public:
     MouseInput(FlutterView& view);
-    void Create();
+    void Create() override;
     bool Dispatch(SDL_Event &e) override;
     bool UpdatePointer(FlutterPointerPhase phase, size_t timestamp, float x, float y, float scroll_delta_x = 0, float scroll_delta_y = 0);
     // Accessors

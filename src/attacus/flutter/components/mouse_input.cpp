@@ -17,21 +17,6 @@ namespace attacus
     {
     }
 
-    /*bool MouseInput::UpdatePointer(FlutterPointerPhase phase, double x, double y, size_t timestamp)
-    {
-      FlutterPointerEvent event = {};
-      event.struct_size = sizeof(event);
-      event.device_kind = kFlutterPointerDeviceKindMouse;
-      event.phase = phase;
-      event.x = x * flutter().scaleFactor_;
-      event.y = y * flutter().scaleFactor_;
-      event.buttons = buttons_;
-      event.timestamp = timestamp;
-
-      FlutterEngineSendPointerEvent(flutter().engine_, &event, 1);
-      return true;
-    }*/
-
     bool MouseInput::UpdatePointer(FlutterPointerPhase phase, size_t timestamp, float x, float y, float scroll_delta_x, float scroll_delta_y)
     {
         FlutterPointerEvent event = {};

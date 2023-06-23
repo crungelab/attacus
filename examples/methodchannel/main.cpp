@@ -20,7 +20,7 @@ public:
         new StandardMethod(*channel_, "incrementCounter",
             [this](const MethodCall<>& call, std::unique_ptr<MethodResult<>> result) {
                 counter_++;
-                result->Success(counter_);
+                result->Success(EncodableValue(counter_));
             });
 
         new StandardMethod(*channel_, "setValue",

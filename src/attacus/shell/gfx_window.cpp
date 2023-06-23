@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
-#include <format>
+
+#include <spdlog/spdlog.h>
 
 #include <SDL.h>
 #include "SDL_syswm.h"
@@ -45,7 +46,7 @@ namespace attacus
 
     if (sdl_window_ == nullptr)
     {
-      std::cout << std::format("SDL Window could not be created: {}\n", SDL_GetError());
+      spdlog::error("SDL Window could not be created: {}\n", SDL_GetError());
       return;
     }
 

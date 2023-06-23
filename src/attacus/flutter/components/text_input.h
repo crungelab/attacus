@@ -13,7 +13,7 @@ class TextInputModel;
 class TextInput : FlutterComponent {
 public:
     TextInput(FlutterView& view);
-    void Create();
+    void Create() override;
     void SendStateUpdate(const TextInputModel& model);
     bool Dispatch(SDL_Event &e) override;
     void DispatchKey(const SDL_KeyboardEvent &event);

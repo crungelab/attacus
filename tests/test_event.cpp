@@ -1,3 +1,5 @@
+#include <list>
+
 #include <gtest/gtest.h>
 
 #include <attacus/core/component.h>

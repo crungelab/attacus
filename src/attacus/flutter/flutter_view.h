@@ -77,7 +77,8 @@ public:
     void* context_ = nullptr;
     void* resource_context_ = nullptr;
     //
-    float zoom_ = 1.25f;
+    //float zoom_ = 1.25f;
+    float zoom_ = 1.00f;
     float pixelRatio_ = 1.0f;
     //
     FlutterConfig* config_ = nullptr;

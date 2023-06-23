@@ -1,6 +1,6 @@
 # Attacus :snake: :butterfly:
 
-Flutter Python Extension
+Python Flutter Extension
 
 [Flutter](https://flutter.dev/)
 
@@ -101,3 +101,8 @@ or
 ```bash
 flutter run
 ```
+
+## Flutter Engine
+  flutter build bundle --local-engine=host_debug_unopt
+
+  ./flutter/tools/gn --runtime-mode=debug --unoptimized --no-stripped --no-goma

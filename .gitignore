@@ -75,4 +75,5 @@ depot
 _cxbuild
 
 # Attacus
+.envrc
 flutter_assets

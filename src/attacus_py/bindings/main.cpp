@@ -186,7 +186,7 @@ void init_main(py::module &attacus, Registry &registry) {
             }
             else if (PyLong_Check(object)) {
                 int64_t val = PyLong_AsLong(object);
-                return self.Success(val);
+                return self.Success(EncodableValue(val));
             }
             else if (PyBytes_Check(object)) {
                 // Get size and pointer to data
@@ -195,7 +195,7 @@ void init_main(py::module &attacus, Registry &registry) {
 
                 // Convert to std::vector<uint8_t>
                 std::vector<uint8_t> val(data, data + size);
-                return self.Success(val);
+                return self.Success(EncodableValue(val));
             }
 
         }

@@ -25,9 +25,10 @@ class GLM(GitSolution):
 	path = 'depot/glm'
 	url = 'https://github.com/g-truc/glm'
 
+#TODO: Need to make this multi-platform
 class FlutterEngine(ZipSolution):
 	path = 'depot/flutter-engine'
-	url = 'https://storage.googleapis.com/flutter_infra_release/flutter/90fa3ae28fe6ddaee1af2c120f01e50201c1401b/windows-x64/windows-x64-embedder.zip'
+	url = 'https://storage.googleapis.com/flutter_infra_release/flutter/45f6e009110df4f34ec2cf99f63cf73b71b7a420/linux-x64/linux-x64-embedder.zip'
 
 solutions = [
 	GoogleTest,

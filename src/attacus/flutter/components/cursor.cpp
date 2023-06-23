@@ -37,9 +37,9 @@ void CursorComponent::Create()
     cursor_hand_ = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
 
     delegates_ = {
-        { "basic", [this](){ SDL_SetCursor(cursor_arrow_);} },
-        { "click", [this](){ SDL_SetCursor(cursor_hand_);} },
-        { "text",  [this](){ SDL_SetCursor(cursor_ibeam_);} },
+        { "basic", (Delegate)[this](){ SDL_SetCursor(cursor_arrow_);} },
+        { "click", (Delegate)[this](){ SDL_SetCursor(cursor_hand_);} },
+        { "text",  (Delegate)[this](){ SDL_SetCursor(cursor_ibeam_);} },
     };
 
     FlutterMessenger &messenger = flutter().messenger();

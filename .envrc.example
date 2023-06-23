@@ -1,0 +1,2 @@
+#export FLUTTER_ENGINE=$HOME/SDK/engine/src
+export LOCAL_ENGINE=host_debug_unopt

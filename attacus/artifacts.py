@@ -1,4 +1,6 @@
-import os
+import os, sys
+import importlib.util
+import platform
 import requests
 import tempfile
 import zipfile
@@ -21,22 +23,71 @@ def ensure() -> None:
     ensure_engine(version)
     ensure_artifacts(version)
 
-def ensure_engine(version: str) -> None:
-    path = Path(user_cache_dir(appname, appauthor)) / 'flutter' / version / 'engine'
-    #logger.debug(path)
-    if not path.exists():
-        url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/windows-x64/windows-x64-embedder.zip'
-        zip_file = download_file(url)
-        extract_zip(zip_file, path)
+def get_flutter_platform():
+    system = platform.system()
+    if system == 'Windows':
+        return 'windows'
+    elif system == 'Linux':
+        return 'linux'
 
-    #os.environ["PATH"] = f"{path}{os.pathsep}{os.environ['PATH']}"
-    os.add_dll_directory(path)
+def ensure_engine(version: str) -> None:
+    #dest = Path(user_cache_dir(appname, appauthor)) / 'flutter' / version / 'engine'
+    dest = get_engine_directory(version)
+    logger.debug(dest)
+    if not dest.exists():
+        download_engine(version, dest)
+    add_library_directory(dest)
+
+def get_engine_directory(version: str):
+    flutter_engine = os.environ.get('FLUTTER_ENGINE')
+    if flutter_engine:
+        local_engine = os.environ.get('LOCAL_ENGINE')
+        return Path(flutter_engine) / 'out' / local_engine
+    return Path(user_cache_dir(appname, appauthor)) / 'flutter' / version / 'engine'
+
+def download_engine(version: str, dest: Path):
+    system = platform.system()
+    if system == 'Windows':
+        url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/windows-x64/windows-x64-embedder.zip'
+    elif system == 'Linux':
+        url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/linux-x64/linux-x64-embedder.zip'
+
+    zip_file = download_file(url)
+    extract_zip(zip_file, dest)
+
+def add_library_directory(path: Path):
+    directory = str(path)
+    logger.debug(f'adding engine directory: {directory}')
+    system = platform.system()
+    if system == 'Windows':
+        os.add_dll_directory(directory)
+    elif system == 'Linux':
+        link_engine(path)
+
+def link_engine(path: Path):
+    # dynamically load a module
+    spec = importlib.util.find_spec('attacus')
+    if spec is not None:
+        # get the directory of the module
+        package_dir = Path(spec.origin).parent
+
+        # source and destination paths
+        source = path / 'libflutter_engine.so'
+        destination = package_dir / 'libflutter_engine.so'
+
+        # create symbolic link
+        if destination.exists:
+            os.remove(destination)
+        destination.symlink_to(source)
+    else:
+        print('Package not found')
 
 def ensure_artifacts(version: str) -> None:
+    flutter_platform =  get_flutter_platform()
     path = Path(user_cache_dir(appname, appauthor)) / 'flutter' / version / 'artifacts'
     #logger.debug(path)
     if not path.exists():
-        url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/windows-x64/artifacts.zip'
+        url = f'https://storage.googleapis.com/flutter_infra_release/flutter/{version}/{flutter_platform}-x64/artifacts.zip'
         zip_file = download_file(url)
         extract_zip(zip_file, path)
 

@@ -14,7 +14,7 @@ namespace attacus {
 class X11Window : public WindowBase {
  public:
 
-    X11Window(WindowParams params = WindowParams()) : WindowBase(params) {}
+    X11Window(WindowBase& parent, WindowParams params = WindowParams()) : WindowBase(parent, params) {}
     virtual ~X11Window();
 
     XWindow GetNativeHandle();

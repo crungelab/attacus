@@ -18,9 +18,16 @@ set(GLM_ROOT ${ATT_ROOT}/depot/glm)
 set(SDL_ROOT ${ATT_ROOT}/depot/sdl)
 set(GLAD_ROOT ${ATT_ROOT}/src/glad)
 
-set(FLUTTER_ROOT ${ATT_ROOT}/depot/engine/src) #TODO: Set as option where to find flutter repo
-set(FLUTTER_ENGINE ${ATT_ROOT}/depot/flutter-engine)
-
+#set(FLUTTER_ROOT ${ATT_ROOT}/depot/engine/src) #TODO: Set as option where to find flutter repo
+#set(ENGINE_OUT ${ATT_ROOT}/depot/flutter-engine)
+#set(ENGINE_OUT $ENV{FLUTTER_ENGINE}/out/host_debug_unopt)
+if(DEFINED ENV{FLUTTER_ENGINE})
+    # if ENV_VAR is defined, set VAR to its value
+    set(ENGINE_OUT $ENV{FLUTTER_ENGINE}/out/host_debug_unopt)
+  else()
+    # otherwise, set VAR to a default value
+    set(ENGINE_OUT ${ATT_ROOT}/depot/flutter-engine)
+endif()
 
 set(EXAMPLES_ROOT ${ATT_ROOT}/examples)
 

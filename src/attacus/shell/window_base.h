@@ -27,7 +27,7 @@ public:
     WindowBase(WindowBase& parent, WindowParams params = WindowParams());
     virtual ~WindowBase();
 
-    virtual void Create();
+    void Create() override;
     virtual void CreateSDLWindow();
     void CleanUp() override;
 

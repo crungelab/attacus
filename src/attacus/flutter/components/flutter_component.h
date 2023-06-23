@@ -12,7 +12,7 @@ class FlutterComponent : public ViewComponent<FlutterView> {
 public:
     FlutterComponent(FlutterView& view);
     FlutterView& flutter() { return *view_; }
-    virtual void Create() override;
+    void Create() override;
     // Data members
     FlutterEngine engine_;
 };

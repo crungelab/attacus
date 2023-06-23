@@ -91,13 +91,19 @@ USES_FLUTTER_ENGINE(${THIS})
 if(${ATT_PLATFORM_WINDOWS})
 add_library(FlutterEngine SHARED IMPORTED)
 set_property(TARGET FlutterEngine PROPERTY
-             IMPORTED_LOCATION ${FLUTTER_ENGINE}/flutter_engine.dll)
+             IMPORTED_LOCATION ${ENGINE_OUT}/flutter_engine.dll)
 set_property(TARGET FlutterEngine PROPERTY
-             IMPORTED_IMPLIB ${FLUTTER_ENGINE}/flutter_engine.dll.lib)
+             IMPORTED_IMPLIB ${ENGINE_OUT}/flutter_engine.dll.lib)
 endif()
 
+if(${ATT_PLATFORM_LINUX})
+    add_library(FlutterEngine SHARED IMPORTED)
+    set_property(TARGET FlutterEngine PROPERTY
+                 IMPORTED_LOCATION ${ENGINE_OUT}/libflutter_engine.so)
+endif()
+    
 target_include_directories(${THIS} PRIVATE
-    ${FLUTTER_ENGINE}
+    ${ENGINE_OUT}
 )
 
 target_link_libraries(${THIS} PRIVATE FlutterEngine)

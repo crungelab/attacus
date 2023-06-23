@@ -6,7 +6,6 @@
 namespace fs = std::filesystem;
 
 #include <string>
-#include <format>
 
 #include <spdlog/spdlog.h>
 
@@ -67,14 +66,14 @@ namespace attacus
         resource_context_ = CreateContext();
         if (resource_context_ == NULL)
         {
-            std::cout << std::format("Can't create opengl context for resource window: {}\n", SDL_GetError());
+            spdlog::error("Can't create opengl context for resource window: {}\n", SDL_GetError());
             return;
         }
 
         context_ = CreateContext();
         if (context_ == NULL)
         {
-            std::cout << std::format("Can't create opengl context: {}\n", SDL_GetError());
+            spdlog::error("Can't create opengl context: {}\n", SDL_GetError());
             return;
         }
 
@@ -120,11 +119,24 @@ namespace attacus
         // config.open_gl.fbo_reset_after_present = true;
         // config.open_gl.fbo_reset_after_present = false;
 
+        /*config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            //return (void*)self.gfx().gl_proc_resolver_(name);
+            GLADapiproc apiproc = self.gfx().gl_proc_resolver_(name);
+            return (void*)apiproc;
+        };*/
         config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
         {
             FlutterView &self = *static_cast<FlutterView *>(userdata);
-            return self.gfx().gl_proc_resolver_(name);
+            if (strncmp(name, "egl", 3) == 0) {
+                return (void*)SDL_EGL_GetProcAddress(name);
+            } else {
+                return (void*)self.gfx().gl_proc_resolver_(name);
+            }
         };
+
+
 
         config.open_gl.gl_external_texture_frame_callback =
             [](void *userdata, int64_t texId, size_t width, size_t height, FlutterOpenGLTexture *texOut) -> bool
@@ -139,8 +151,8 @@ namespace attacus
     void FlutterView::InitProjectArgs(FlutterProjectArgs &args)
     {
         args.struct_size = sizeof(FlutterProjectArgs);
-        args.assets_path = _strdup(config().assets_path_.c_str());
-        args.icu_data_path = _strdup(config().icu_data_path_.c_str());
+        args.assets_path = strdup(config().assets_path_.c_str());
+        args.icu_data_path = strdup(config().icu_data_path_.c_str());
         args.platform_message_callback = [](const FlutterPlatformMessage *message, void *user_data)
         {
             FlutterView &self = *static_cast<FlutterView *>(user_data);
@@ -236,9 +248,6 @@ namespace attacus
         SDL_GetWindowSizeInPixels(sdl_window_, &pw, &ph);
         //printf("Window size in pixels: width=%i, height=%i\n", pw, ph);
 
-        // pixelRatio_ = (float)pw / (float)w;
-        // pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_);
-        // pixelRatio_ = 1.25f; // TODO: Something is wrong.  The screen is too small after updating SDL :(
         pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_) * zoom_ ;
         //printf("Pixel ratio: %f\n", pixelRatio_);
 

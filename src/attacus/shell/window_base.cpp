@@ -1,5 +1,6 @@
 #include <iostream>
-#include <format>
+
+#include <spdlog/spdlog.h>
 
 #include <SDL.h>
 #include "SDL_syswm.h"
@@ -34,7 +35,7 @@ void WindowBase::CreateSDLWindow() {
     sdl_window_ = SDL_CreateWindowWithPosition(name_.c_str(), x(), y(), width(), height(), flags_);
 
     if (sdl_window_ == nullptr) {
-        std::cout << std::format("Window could not be created: {}\n", SDL_GetError());
+        spdlog::error("Window could not be created: {}\n", SDL_GetError());
         return;
     }
 

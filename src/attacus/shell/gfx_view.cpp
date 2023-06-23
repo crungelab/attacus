@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
-#include <format>
+
+#include <spdlog/spdlog.h>
 
 #include <glad/gl.h>
 #include "SDL.h"
@@ -55,7 +56,7 @@ namespace attacus
     current_context_ = context;
     if (context == NULL)
     {
-      std::cout << std::format("Can't create opengl context: {}\n", SDL_GetError());
+      spdlog::error("Can't create opengl context: {}\n", SDL_GetError());
       return nullptr;
     }
 
@@ -75,7 +76,7 @@ namespace attacus
     }
     if (SDL_GL_SetSwapInterval(1) < 0)
     {
-      std::cout << std::format("Couldn't enable vsync: {}\n", SDL_GetError());
+      spdlog::error("Couldn't enable vsync: {}\n", SDL_GetError());
     }
   }
 

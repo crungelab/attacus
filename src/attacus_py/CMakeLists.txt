@@ -24,6 +24,8 @@ pybind11_add_module(${THIS} MODULE
 
 set_target_properties(${THIS} PROPERTIES OUTPUT_NAME ${MODULE})
 
+set_target_properties(${THIS} PROPERTIES INSTALL_RPATH "$ORIGIN")
+
 USES_PYBIND11(${THIS})
 USES_ATTACUS(${THIS})
 

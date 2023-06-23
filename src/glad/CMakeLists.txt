@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(Glad LANGUAGES CXX)
+project(Glad LANGUAGES CXX C)
 
 set(THIS ${PROJECT_NAME})
 set(_ ${CMAKE_CURRENT_SOURCE_DIR}

@@ -11,11 +11,15 @@ function(USES_PYBIND11 THIS)
     USES_STD(${THIS})
     #set_target_properties(${project} PROPERTIES PREFIX "lib")
 
-    if(CMAKE_COMPILER_IS_GNUCXX)
-        set_target_properties(${THIS} PROPERTIES SUFFIX ".so")
-    else()
+    #if(CMAKE_COMPILER_IS_GNUCXX)
+    #    set_target_properties(${THIS} PROPERTIES SUFFIX ".so")
+    #else()
+    #    set_target_properties(${THIS} PROPERTIES SUFFIX ".pyd")
+    #endif(CMAKE_COMPILER_IS_GNUCXX)
+
+    if(ATT_PLATFORM_WINDOWS)
         set_target_properties(${THIS} PROPERTIES SUFFIX ".pyd")
-    endif(CMAKE_COMPILER_IS_GNUCXX)
+    endif(ATT_PLATFORM_WINDOWS)
 
     #target_include_directories(${THIS} PRIVATE
     #    ${PYBIND11_ROOT}/include

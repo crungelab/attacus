@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-#include <format>
 
 #include <glad/gl.h>
 #include <SDL.h>
