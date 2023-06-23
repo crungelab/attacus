@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <glad/gl.h>
+#include "SDL_opengl.h"
 
 #include <attacus/shell/surface.h>
 #include <attacus/flutter/flutter_view.h>

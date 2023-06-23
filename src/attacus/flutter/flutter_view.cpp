@@ -132,7 +132,8 @@ namespace attacus
             if (strncmp(name, "egl", 3) == 0) {
                 return (void*)SDL_EGL_GetProcAddress(name);
             } else {
-                return (void*)self.gfx().gl_proc_resolver_(name);
+                //return (void*)self.gfx().gl_proc_resolver_(name);
+                return (void*)SDL_GL_GetProcAddress(name);
             }
         };
 

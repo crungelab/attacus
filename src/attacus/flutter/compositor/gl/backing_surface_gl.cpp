@@ -1,4 +1,6 @@
-#include <glad/gl.h>
+#define GL_GLEXT_PROTOTYPES
+#include "SDL_opengl.h"
+
 #include "backing_surface_gl.h"
 
 namespace attacus {

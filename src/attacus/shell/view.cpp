@@ -1,7 +1,6 @@
 #include <string>
 #include <iostream>
 
-#include <glad/gl.h>
 #include <SDL.h>
 #include "SDL_syswm.h"
 

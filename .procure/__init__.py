@@ -13,10 +13,6 @@ class SDL(GitSolution):
 	path = 'depot/sdl'
 	url = 'https://github.com/libsdl-org/SDL'
 
-class Glad(GitSolution):
-	path = 'depot/glad'
-	url = 'https://github.com/Dav1dde/glad'
-
 class Pybind11(GitSolution):
 	path = 'depot/pybind11'
 	url = 'https://github.com/pybind/pybind11'
@@ -34,7 +30,6 @@ solutions = [
 	GoogleTest,
 	Spdlog,
     SDL,
-    Glad,
     Pybind11,
     GLM,
     FlutterEngine

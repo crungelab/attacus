@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glad/gl.h>
-
 namespace attacus {
 
 class GfxView;
@@ -21,8 +19,6 @@ public:
     bool debug_ = false;
     uint32_t resetFlags_;
     uint32_t debugFlags_;
-    // OpenGL
-    GLADloadfunc gl_proc_resolver_ = nullptr;
 };
 
 } // namespace attacus

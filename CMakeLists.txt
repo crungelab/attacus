@@ -57,11 +57,6 @@ endif() #HAS_SDL
 # Glad
 #
 if(${ATT_RENDERER_GL})
-    #add_subdirectory(${GLAD_ROOT}/cmake glad)
-    #glad_add_library(glad_gl_core_45 STATIC API gl:core=4.5)
-    if(${HAS_GLAD})
-    add_subdirectory(src/glad)
-    endif() #HAS_GLAD
 endif()
 
 #

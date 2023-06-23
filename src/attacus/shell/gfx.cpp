@@ -3,11 +3,11 @@
 
 #include <spdlog/spdlog.h>
 
-#include <glad/gl.h>
-//#include <glad/egl.h>
 #include "SDL.h"
 #include "SDL_syswm.h"
+#include "SDL_opengl.h"
 #include "SDL_egl.h"
+
 #include "gfx_view.h"
 #include "gfx.h"
 
@@ -25,29 +25,11 @@ namespace attacus
 
   void Gfx::Create()
   {
-
-    gl_proc_resolver_ = (GLADloadfunc)SDL_GL_GetProcAddress;
-    int version = gladLoadGL(gl_proc_resolver_);
-    spdlog::info("OpenGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
-
-    //SDL_EGL_LoadLibraryOnly
-      //int version = gladLoadEGLLoader((GLADloadproc)gl_proc_resolver_);
-    //gladLoadEGLLoader((GLADloadproc)gl_proc_resolver_);
-    //gladLoadEGLLoader((GLADloadproc)SDL_EGL_GetProcAddress);
-    //spdlog::info("EGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
     SDL_SysWMinfo wmInfo;
     SDL_GetWindowWMInfo(view().sdl_window_, &wmInfo, SDL_SYSWM_CURRENT_VERSION);
 
     EGLNativeDisplayType nativeDisplay = (EGLNativeDisplayType)wmInfo.info.x11.display;
-    /*if (!gladLoadEGL()) {
-        spdlog::error("Could not load EGL");
-    }*/
-    //int egl_version = gladLoadEGL(nativeDisplay, (GLADloadfunc)SDL_EGL_GetProcAddress);
-    //spdlog::info("EGL {}.{} loaded\n", GLAD_VERSION_MAJOR(egl_version), GLAD_VERSION_MINOR(egl_version));
-
-    //EGLDisplay display = eglGetDisplay(nativeDisplay);
     EGLDisplay display = eglGetPlatformDisplay(EGL_PLATFORM_X11_EXT, nativeDisplay, NULL);
-    //EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     EGLint major, minor;
     if (!eglInitialize(display, &major, &minor)) {
       spdlog::error("Could not initialize EGL");
