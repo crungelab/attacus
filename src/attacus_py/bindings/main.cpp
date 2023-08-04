@@ -5,6 +5,8 @@
 #include <pybind11/functional.h>
 #include <pybind11/stl.h>
 
+#include <spdlog/spdlog.h>
+
 #include "bindtools.h"
 
 #include <attacus/app.h>
@@ -160,13 +162,18 @@ void init_main(py::module &attacus, Registry &registry) {
                 channel,
                 name,
                 [cb](const StandardMethodCall &call, std::unique_ptr<StandardMethodResult> result){
-                    std::cout << "StandardMethodCall" << std::endl;
+                    std::cout << "StandardMethodCall:" << std::endl;
                     std::cout << cb << std::endl;
                     auto py_call = py::cast(&call);
                     std::cout << "py_call: " << py_call << std::endl;
                     auto py_result = py::cast(std::move(result));
                     std::cout << "py_result: " << py_result << std::endl;
-                    cb(py_call, py_result);
+                    try {
+                        py::object val = cb(py_call, py_result);
+                    } catch (py::error_already_set &e) {
+                        //std::cerr << "Caught Python exception: " << e.what() << std::endl;
+                        spdlog::error("Python: {}", e.what());
+                    }
                 }
             );
         }))
@@ -177,7 +184,7 @@ void init_main(py::module &attacus, Registry &registry) {
         .def("arguments", &StandardMethodCall::arguments)
     PYCLASS_END(attacus, StandardMethodCall)
 
-    PYCLASS_BEGIN(attacus, StandardMethodResult)
+    /*PYCLASS_BEGIN(attacus, StandardMethodResult)
     //auto _StandardMethodResult = py::class_<StandardMethodResult, std::unique_ptr<StandardMethodResult, py::nodelete>>(attacus, "StandardMethodResult")
         .def("success", [](StandardMethodResult& self, py::object obj) {
             PyObject* object = obj.ptr();
@@ -201,7 +208,23 @@ void init_main(py::module &attacus, Registry &registry) {
         }
         , py::arg("value") = nullptr
         )
+    PYCLASS_END(attacus, StandardMethodResult)*/
+
+    PYCLASS_BEGIN(attacus, StandardMethodResult)
+    //auto _StandardMethodResult = py::class_<StandardMethodResult, std::unique_ptr<StandardMethodResult, py::nodelete>>(attacus, "StandardMethodResult")
+        .def("success", [](StandardMethodResult& self, py::object obj) {
+            PyObject* object = obj.ptr();
+            if (Py_IsNone(object)) {
+                return self.Success();
+            }
+            else {
+                return self.Success(encode(obj));
+            }
+        }
+        , py::arg("value") = nullptr
+        )
     PYCLASS_END(attacus, StandardMethodResult)
+
 
     //PYCLASS_BEGIN(attacus, EncodableValue)
     auto _EncodableValue = py::class_<EncodableValue, std::unique_ptr<EncodableValue, py::nodelete>>(attacus, "EncodableValue")

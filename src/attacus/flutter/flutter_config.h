@@ -4,8 +4,6 @@
 
 namespace attacus {
 
-class Gfx;
-
 class FlutterConfig {
 public:
     FlutterConfig();

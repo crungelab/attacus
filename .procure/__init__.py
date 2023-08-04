@@ -26,11 +26,16 @@ class FlutterEngine(ZipSolution):
 	path = 'depot/flutter-engine'
 	url = 'https://storage.googleapis.com/flutter_infra_release/flutter/45f6e009110df4f34ec2cf99f63cf73b71b7a420/linux-x64/linux-x64-embedder.zip'
 
+class FlutterArtifacts(ZipSolution):
+    path = "depot/flutter-artifacts"
+    url = "https://storage.googleapis.com/flutter_infra_release/flutter/45f6e009110df4f34ec2cf99f63cf73b71b7a420/linux-x64/artifacts.zip"
+
 solutions = [
 	GoogleTest,
 	Spdlog,
     SDL,
     Pybind11,
     GLM,
-    FlutterEngine
+    FlutterEngine,
+    FlutterArtifacts
 ]

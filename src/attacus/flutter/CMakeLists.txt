@@ -36,9 +36,6 @@ set(FLUTTER_HEADERS
     json_method_codec.h
 
     components/flutter_component.h
-    components/isolate.h
-    components/platform.h
-    components/navigation.h
     components/cursor.h
     components/mouse_input.h
     components/text_input.h
@@ -65,9 +62,6 @@ set(FLUTTER_SRC
     json_method_codec.cpp
 
     components/flutter_component.cpp
-    components/isolate.cpp
-    components/platform.cpp
-    components/navigation.cpp
     components/cursor.cpp
     components/mouse_input.cpp
     components/text_input.cpp

@@ -6,8 +6,6 @@
 
 namespace attacus {
 
-class Gfx;
-
 class App : public GfxWindow {
 public:
     enum class State {
@@ -39,8 +37,6 @@ public:
     // Data members
     State state_;
     std::thread render_thread_;
-    //
-    Gfx* gfx_ = nullptr;
 };
 
 } // namespace attacus

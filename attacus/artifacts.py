@@ -76,7 +76,7 @@ def link_engine(path: Path):
         destination = package_dir / 'libflutter_engine.so'
 
         # create symbolic link
-        if destination.exists:
+        if destination.exists():
             os.remove(destination)
         destination.symlink_to(source)
     else:

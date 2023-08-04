@@ -43,6 +43,12 @@ cxbuild develop
 cxbuild
 ```
 
+### Visual Studio Code
+```bash
+hatch shell
+code --reuse-window .
+```
+
 ### [Flutter Custom Devices](https://github.com/flutter/flutter/wiki/Using-custom-embedders-with-the-Flutter-CLI)
 This will enable and display the location of your .flutter_custom_devices.json file
 ```
@@ -103,6 +109,7 @@ flutter run
 ```
 
 ## Flutter Engine
-  flutter build bundle --local-engine=host_debug_unopt
+flutter build bundle --local-engine=host_debug_unopt
 
-  ./flutter/tools/gn --runtime-mode=debug --unoptimized --no-stripped --no-goma
+./flutter/tools/gn --runtime-mode=debug --unoptimized --no-stripped --no-goma
+ninja -C out/host_debug_unopt

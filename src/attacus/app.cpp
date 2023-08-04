@@ -7,8 +7,6 @@
 #include "SDL.h"
 #include "SDL_syswm.h"
 
-#include <attacus/shell/gfx.h>
-
 #include "app.h"
 
 namespace attacus
@@ -58,8 +56,6 @@ namespace attacus
         {
             return;
         }
-
-        Gfx::instance().Reset();
 
         /*for (std::vector<View*>::iterator it = children_.begin(); it != children_.end(); ++it){
             View* child = *it;

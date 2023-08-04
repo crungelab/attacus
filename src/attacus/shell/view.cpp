@@ -1,6 +1,8 @@
 #include <string>
 #include <iostream>
 
+#include <spdlog/spdlog.h>
+
 #include <SDL.h>
 #include "SDL_syswm.h"
 
@@ -16,6 +18,8 @@ View::View(View& parent, ViewParams params) : Surface(params),
     name_(params.name),
     parent_(&parent),
     view_id_(view_count_++) {
+    //TODO: Without this print statement I get a segfault in Release mode on Linux.  WTF?!!!
+    std::cout << "parent: " << &parent << std::endl;
     if (parent_ == nullptr) {
         return;
     }

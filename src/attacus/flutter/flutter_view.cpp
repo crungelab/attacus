@@ -13,7 +13,6 @@ namespace fs = std::filesystem;
 #include <SDL_syswm.h>
 
 #include <attacus/app.h>
-#include <attacus/shell/gfx.h>
 
 #include "flutter_embedder.h"
 #include "flutter_messenger.h"
@@ -23,9 +22,6 @@ namespace fs = std::filesystem;
 // TODO: Fix:  Depends on OpenGL
 #include "compositor/gl/compositor_gl.h"
 
-#include "components/isolate.h"
-#include "components/platform.h"
-#include "components/navigation.h"
 #include "components/cursor.h"
 #include "components/mouse_input.h"
 #include "components/text_input.h"
@@ -44,9 +40,6 @@ namespace attacus
 
         compositor_ = new CompositorGL(*this);
 
-        isolate_ = new IsolateComponent(*this);
-        platform_ = new PlatformComponent(*this);
-        navigation_ = new NavigationComponent(*this);
         cursor_ = new CursorComponent(*this);
         mouseInput_ = new MouseInput(*this);
         textInput_ = new TextInput(*this);
@@ -66,14 +59,14 @@ namespace attacus
         resource_context_ = CreateContext();
         if (resource_context_ == NULL)
         {
-            spdlog::error("Can't create opengl context for resource window: {}\n", SDL_GetError());
+            spdlog::error("Can't create opengl context for resource window: {}", SDL_GetError());
             return;
         }
 
         context_ = CreateContext();
         if (context_ == NULL)
         {
-            spdlog::error("Can't create opengl context: {}\n", SDL_GetError());
+            spdlog::error("Can't create opengl context: {}", SDL_GetError());
             return;
         }
 
@@ -119,13 +112,6 @@ namespace attacus
         // config.open_gl.fbo_reset_after_present = true;
         // config.open_gl.fbo_reset_after_present = false;
 
-        /*config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
-        {
-            FlutterView &self = *static_cast<FlutterView *>(userdata);
-            //return (void*)self.gfx().gl_proc_resolver_(name);
-            GLADapiproc apiproc = self.gfx().gl_proc_resolver_(name);
-            return (void*)apiproc;
-        };*/
         config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
         {
             FlutterView &self = *static_cast<FlutterView *>(userdata);
@@ -197,9 +183,6 @@ namespace attacus
 
         compositor().Create();
 
-        isolate().Create();
-        platform().Create();
-        navigation().Create();
         cursor().Create();
         mouseInput().Create();
         textInput().Create();
@@ -250,7 +233,7 @@ namespace attacus
         //printf("Window size in pixels: width=%i, height=%i\n", pw, ph);
 
         pixelRatio_ = SDL_GetWindowPixelDensity(sdl_window_) * zoom_ ;
-        //printf("Pixel ratio: %f\n", pixelRatio_);
+        //spdlog::debug("Pixel ratio: {}", pixelRatio_);
 
         FlutterWindowMetricsEvent event = {0};
         event.struct_size = sizeof(event);
@@ -259,7 +242,7 @@ namespace attacus
         event.pixel_ratio = pixelRatio_;
 
         FlutterEngineSendWindowMetricsEvent(engine_, &event);
-        FlutterEngineScheduleFrame(engine_);
+        //FlutterEngineScheduleFrame(engine_);
     }
 
     bool FlutterView::Dispatch(SDL_Event &e)

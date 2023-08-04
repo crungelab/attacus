@@ -20,7 +20,6 @@ set(SHELL_HEADERS
     window.h
     gfx_window.h
     gfx_view.h
-    gfx.h
 )
 
 set(SHELL_SRC
@@ -33,7 +32,6 @@ set(SHELL_SRC
     window.cpp
     gfx_window.cpp
     gfx_view.cpp
-    gfx.cpp
 )
 
 add_library(${THIS} STATIC ${SHELL_SRC} ${SHELL_HEADERS})

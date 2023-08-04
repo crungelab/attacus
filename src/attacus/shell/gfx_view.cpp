@@ -7,14 +7,12 @@
 #include "SDL_syswm.h"
 
 #include "gfx_view.h"
-#include "gfx.h"
 
 namespace attacus
 {
 
   void *GfxView::current_context_ = nullptr;
   void *GfxView::gfx_context_ = nullptr;
-  static bool initialized_ = false;
 
   GfxView::GfxView(View &parent, ViewParams params) : View(parent, params),
                                                       time_offset_(0)
@@ -71,25 +69,11 @@ namespace attacus
       {
         return;
       }
-      InitGfx();
     }
     if (SDL_GL_SetSwapInterval(1) < 0)
     {
       spdlog::error("Couldn't enable vsync: {}\n", SDL_GetError());
     }
-  }
-
-  void GfxView::InitGfx()
-  {
-    if (initialized_)
-    {
-      gfx_ = Gfx::instance_;
-      return;
-    }
-
-    gfx_ = new Gfx(*this);
-    gfx_->Create();
-    initialized_ = true;
   }
 
   void GfxView::CreateFramebuffer()
