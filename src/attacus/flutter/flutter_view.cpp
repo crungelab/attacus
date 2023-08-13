@@ -11,6 +11,7 @@ namespace fs = std::filesystem;
 
 #include <SDL.h>
 #include <SDL_syswm.h>
+#include <SDL_opengles2.h>
 
 #include <attacus/app.h>
 
@@ -20,7 +21,7 @@ namespace fs = std::filesystem;
 #include "flutter_view.h"
 
 // TODO: Fix:  Depends on OpenGL
-#include "compositor/gl/compositor_gl.h"
+//#include "compositor/gl/compositor_gl.h"
 
 #include "components/cursor.h"
 #include "components/mouse_input.h"
@@ -38,7 +39,7 @@ namespace attacus
         messenger_ = new FlutterMessenger(*this);
         runner_ = new FlutterRunner(*this);
 
-        compositor_ = new CompositorGL(*this);
+        //compositor_ = new CompositorGL(*this);
 
         cursor_ = new CursorComponent(*this);
         mouseInput_ = new MouseInput(*this);
@@ -69,8 +70,11 @@ namespace attacus
             spdlog::error("Can't create opengl context: {}", SDL_GetError());
             return;
         }
-
-        SDL_GL_MakeCurrent(sdl_window_, nullptr);
+        if (SDL_GL_MakeCurrent(sdl_window_, nullptr) < 0)
+        {
+            spdlog::error("Can't unset opengl context: {}", SDL_GetError());
+            return;
+        }
     }
 
     void FlutterView::InitRendererConfig(FlutterRendererConfig &config)
@@ -79,23 +83,38 @@ namespace attacus
         config.open_gl.struct_size = sizeof(config.open_gl);
         config.open_gl.make_current = [](void *userdata) -> bool
         {
+            spdlog::debug("make_current");
             FlutterView &self = *static_cast<FlutterView *>(userdata);
             auto window = self.sdl_window_;
-            SDL_GL_MakeCurrent(window, self.context_);
+            if (SDL_GL_MakeCurrent(window, self.context_) < 0)
+            {
+                spdlog::error("Can't set opengl context: {}", SDL_GetError());
+                return false;
+            }
             return true;
         };
-        config.open_gl.make_resource_current = [](void *userdata) -> bool
+        /*config.open_gl.make_resource_current = [](void *userdata) -> bool
         {
+            spdlog::debug("make_resource_current");
             FlutterView &self = *static_cast<FlutterView *>(userdata);
             auto window = self.sdl_window_;
-            SDL_GL_MakeCurrent(window, self.resource_context_);
+            if (SDL_GL_MakeCurrent(window, self.resource_context_) < 0)
+            {
+                spdlog::error("Can't set opengl resource context: {}", SDL_GetError());
+                return false;
+            }
             return true;
-        };
+        };*/
         config.open_gl.clear_current = [](void *userdata) -> bool
         {
+            spdlog::debug("clear_current");
             FlutterView &self = *static_cast<FlutterView *>(userdata);
             auto window = self.sdl_window_;
-            SDL_GL_MakeCurrent(window, nullptr);
+            if (SDL_GL_MakeCurrent(window, nullptr) < 0)
+            {
+                spdlog::error("Can't unset opengl context: {}", SDL_GetError());
+                return false;
+            }
             return true;
         };
         config.open_gl.present = [](void *userdata) -> bool
@@ -115,15 +134,15 @@ namespace attacus
         config.open_gl.gl_proc_resolver = [](void *userdata, const char *name) -> void *
         {
             FlutterView &self = *static_cast<FlutterView *>(userdata);
+            //spdlog::debug("gl_proc_resolver: {}", name);
+            SDL_FunctionPointer func;
             if (strncmp(name, "egl", 3) == 0) {
-                return (void*)SDL_EGL_GetProcAddress(name);
+                func = SDL_EGL_GetProcAddress(name);
             } else {
-                //return (void*)self.gfx().gl_proc_resolver_(name);
-                return (void*)SDL_GL_GetProcAddress(name);
+                func = SDL_GL_GetProcAddress(name);
             }
+            return (void*)func;
         };
-
-
 
         config.open_gl.gl_external_texture_frame_callback =
             [](void *userdata, int64_t texId, size_t width, size_t height, FlutterOpenGLTexture *texOut) -> bool
@@ -147,7 +166,7 @@ namespace attacus
         };
         args.custom_task_runners = &runner_->custom_task_runners;
 
-        args.compositor = compositor().InitCompositor();
+        //args.compositor = compositor().InitCompositor();
     }
 
     void FlutterView::InitEngine(FlutterRendererConfig &config, FlutterProjectArgs &args)
@@ -181,7 +200,7 @@ namespace attacus
         messenger().Create();
         runner().Create();
 
-        compositor().Create();
+        //compositor().Create();
 
         cursor().Create();
         mouseInput().Create();

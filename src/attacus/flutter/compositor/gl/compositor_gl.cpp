@@ -1,7 +1,8 @@
 #include <iostream>
 
 #define GL_GLEXT_PROTOTYPES
-#include "SDL_opengl.h"
+//#include "SDL_opengl.h"
+#include <SDL_opengles2.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -115,7 +116,8 @@ namespace attacus
     backing_store_out.user_data = &surface;
     backing_store_out.open_gl.type = kFlutterOpenGLTargetTypeFramebuffer;
     FlutterOpenGLFramebuffer &fbOut = backing_store_out.open_gl.framebuffer;
-    fbOut.target = GL_RGBA8;
+    //fbOut.target = GL_RGBA8;
+    fbOut.target = GL_RGBA;
     fbOut.name = surface.framebuffer_id_;
     //
     fbOut.destruction_callback = [](void *userdata) {};
@@ -200,8 +202,8 @@ namespace attacus
 
     // Create Vertex Array Object
     GLuint vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArraysOES(1, &vao);
+    glBindVertexArrayOES(vao);
 
     // Create a Vertex Buffer Object and copy the vertex data to it
     GLuint vbo;
@@ -259,7 +261,7 @@ namespace attacus
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
-    glBindFragDataLocation(shaderProgram, 0, "outColor");
+    glBindFragDataLocationEXT(shaderProgram, 0, "outColor");
     glLinkProgram(shaderProgram);
     glUseProgram(shaderProgram);
 
@@ -283,8 +285,8 @@ namespace attacus
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     // Cleanup
-    glBindVertexArray(0);
-    glDeleteVertexArrays(1, &vao);
+    glBindVertexArrayOES(0);
+    glDeleteVertexArraysOES(1, &vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDeleteBuffers(1, &vbo);

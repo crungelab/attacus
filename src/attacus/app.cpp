@@ -25,20 +25,24 @@ namespace attacus
 
     void App::Create()
     {
-        GfxWindow::Create();
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
             printf("SDL could not initialize. SDL_Error: %s\n", SDL_GetError());
             return;
         }
 
-        if (SDL_GL_LoadLibrary(nullptr) < 0)
+        /*if (SDL_GL_LoadLibrary(nullptr) < 0)
         {
             printf("SDL_GL_LoadLibrary failed. SDL_Error: %s\n", SDL_GetError());
             return;
+        }*/
+        if (SDL_GL_LoadLibrary("libGLESv2.so") < 0) {
+            printf("Unable to load OpenGL ES library: %s\n", SDL_GetError());
+            return;
         }
+        GfxWindow::Create();
 
-        RegisterResizer();
+        //RegisterResizer();
     }
 
     void App::Destroy()

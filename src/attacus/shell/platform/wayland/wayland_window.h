@@ -15,7 +15,7 @@ namespace attacus {
 class WaylandWindow : public WindowBase {
  public:
 
-    WaylandWindow(WindowParams params = WindowParams()) : WindowBase(params) {}
+    WaylandWindow(WindowBase& parent, WindowParams params = WindowParams()) : WindowBase(parent, params) {}
     virtual ~WaylandWindow();
 
     wl_surface* GetNativeHandle();

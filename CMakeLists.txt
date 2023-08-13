@@ -46,8 +46,10 @@ set(SDL_AUDIO OFF CACHE BOOL "Use audio subsystem" FORCE)
 set(SDL_HAPTIC OFF CACHE BOOL "Use haptic subsystem" FORCE)
 set(HIDAPI OFF CACHE BOOL "Use HIDAPI for low level joystick drivers" FORCE)
 
-set(VIDEO_X11 ${ATT_WM_X11} CACHE BOOL "Enable X11 support" FORCE)
-set(VIDEO_WAYLAND ${ATT_WM_WAYLAND} CACHE BOOL "Enable Wayland support" FORCE)
+set(SDL_X11 ${ATT_WM_X11} CACHE BOOL "Enable X11 support" FORCE)
+set(SDL_WAYLAND ${ATT_WM_WAYLAND} CACHE BOOL "Enable Wayland support" FORCE)
+set(SDL_KMSDRM ${ATT_WM_DRM} CACHE BOOL "Enable DRM/KMS support" FORCE)
+set(SDL_LIBUDEV ${ATT_WM_DRM} CACHE BOOL "Enable libudev support" FORCE)
 
 if(${HAS_SDL})
 add_subdirectory(depot/sdl)
@@ -79,18 +81,19 @@ add_subdirectory(examples)
 endif() #HAS_EXAMPLES
 
 #
-# googletest
-#
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-add_subdirectory(depot/googletest)
-
-#
 # spdlog
 #
 add_subdirectory(depot/spdlog)
 set_target_properties(spdlog PROPERTIES POSITION_INDEPENDENT_CODE ${ATT_STATIC_PIC})
+
+#
+# googletest
+#
+#set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+#set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+#add_subdirectory(depot/googletest)
+
 #
 #Tests
 #
-add_subdirectory(tests)
+#add_subdirectory(tests)

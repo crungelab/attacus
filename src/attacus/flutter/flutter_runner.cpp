@@ -32,9 +32,9 @@ FlutterRunner::FlutterRunner(FlutterView& view) : view_(&view) {
                 FlutterEngineResult result = FlutterEngineRunTask(self.engine_, &task);
             }), &self);
     };
-    //
-    custom_task_runners.struct_size = sizeof(FlutterCustomTaskRunners);
-    custom_task_runners.platform_task_runner = &platform_task_runner;
+    //TODO: Flutter embedder has a bug using custom task runners in debug mode
+    //custom_task_runners.struct_size = sizeof(FlutterCustomTaskRunners);
+    //custom_task_runners.platform_task_runner = &platform_task_runner;
     //custom_task_runners.render_task_runner = &render_task_runner;
 }
 

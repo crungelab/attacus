@@ -17,7 +17,8 @@ set(GLM_ROOT ${ATT_ROOT}/depot/glm)
 set(SDL_ROOT ${ATT_ROOT}/depot/sdl)
 
 if(DEFINED ENV{FLUTTER_ENGINE})
-    set(ENGINE_OUT $ENV{FLUTTER_ENGINE}/out/host_debug_unopt)
+    #set(ENGINE_OUT $ENV{FLUTTER_ENGINE}/out/host_debug_unopt)
+    set(ENGINE_OUT $ENV{FLUTTER_ENGINE}/out/$ENV{LOCAL_ENGINE})
   else()
     set(ENGINE_OUT ${ATT_ROOT}/depot/flutter-engine)
 endif()
@@ -52,7 +53,11 @@ set(ATT_RENDERER_GL ON)
 set(ATT_RENDERER_VULKAN OFF)
 
 option(ATT_WM_WAYLAND "Use Wayland" OFF)
-cmake_dependent_option(ATT_WM_X11 "Use X11" ON "ATT_PLATFORM_LINUX; NOT ATT_WM_WAYLAND" OFF)
+option(ATT_WM_DRM "Use DRM/KMS" OFF)
+option(ATT_EMBEDDED "Embedded Device" OFF)
+
+cmake_dependent_option(ATT_WM_X11 "Use X11" ON "ATT_PLATFORM_LINUX; NOT ATT_WM_WAYLAND; NOT ATT_WM_DRM" OFF)
+
 
 
 set(ATT_COMPILE_DEFS 
@@ -67,32 +72,28 @@ elseif(${ATT_WM_WAYLAND})
     set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
         SDL_VIDEO_DRIVER_WAYLAND=1
     )
-endif()
-
-if(${ATT_RENDERER_GL})
+    if(${ATT_EMBEDDED})
+        set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
+            SDL_DISABLE_SYSWM_X11=1
+            SDL_DISABLE_SYSWM_X11_TYPES=1
+            SDL_VIDEO_DRIVER_WAYLAND_QT_TOUCH=1
+        )
+    endif()
+elseif(${ATT_WM_DRM})
     set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
-        BGFX_CONFIG_RENDERER_OPENGL=1
-        BGFX_CONFIG_RENDERER_OPENGLES=0
-        BGFX_CONFIG_RENDERER_VULKAN=0
-    )
-elseif(${ATT_RENDERER_VULKAN})
-    set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
-        BGFX_CONFIG_RENDERER_OPENGL=0
-        BGFX_CONFIG_RENDERER_OPENGLES=0
-        BGFX_CONFIG_RENDERER_VULKAN=1
+        SDL_VIDEO_DRIVER_KMSDRM=1
+        SDL_DISABLE_SYSWM_X11=1
+        SDL_DISABLE_SYSWM_X11_TYPES=1
     )
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(BX_COMPATIBILITY ${BX_ROOT}/include/compat/msvc)
-endif()
-
+# TODO: Needs be CMake options
 # Comment out items to minimize builds for testing
 set(HAS_APP 1)
 set(HAS_SHELL 1)
 set(HAS_FLUTTER 1)
-set(HAS_PYBIND11 1)
+#set(HAS_PYBIND11 1)
 set(HAS_SDL 1)
 set(HAS_GLAD 1)
-set(HAS_PY 1)
+#set(HAS_PY 1)
 set(HAS_EXAMPLES 1)

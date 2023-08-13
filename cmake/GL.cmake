@@ -6,6 +6,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Standard.cmake)
 
 function(USES_GL THIS)
     USES_STD(${THIS})
-    target_link_libraries(${THIS} PRIVATE GL EGL)
+    #target_link_libraries(${THIS} PRIVATE GL EGL)
+    target_link_libraries(${THIS} PRIVATE GLESv2 EGL)
 endfunction()
 
