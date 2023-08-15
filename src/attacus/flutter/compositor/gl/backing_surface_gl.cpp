@@ -1,5 +1,6 @@
-#define GL_GLEXT_PROTOTYPES
-#include "SDL_opengl.h"
+//#define GL_GLEXT_PROTOTYPES
+//#include "SDL_opengl.h"
+#include <glad/glad.h>
 
 #include "backing_surface_gl.h"
 
@@ -17,7 +18,7 @@ void BackingSurfaceGL::Create() {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width(), height(), 0, GL_RGBA,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width(), height(), 0, GL_RGBA,
                 GL_UNSIGNED_BYTE, NULL);
     glBindTexture(GL_TEXTURE_2D, 0);
 

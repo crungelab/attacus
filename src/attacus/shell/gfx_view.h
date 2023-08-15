@@ -1,8 +1,11 @@
 #pragma once
 
+//#include <glad/glad.h>
 #include "view.h"
 
 namespace attacus {
+
+typedef void* (* GLESloadproc)(const char *name);
 
 class GfxView : public View {
 public:
@@ -19,8 +22,9 @@ public:
 
     // Accessors
     // Data members
-    static void* current_context_;
-    static void* gfx_context_;
+    void* current_context_;
+    void* gfx_context_;
+    GLESloadproc gl_proc_resolver_ = nullptr;
 
     int64_t time_offset_;
     bool capture_ = false;

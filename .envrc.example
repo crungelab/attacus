@@ -1,4 +1,9 @@
-#export FLUTTER_ENGINE=$HOME/SDK/engine/src
-export LOCAL_ENGINE=host_debug_unopt
+export FLUTTER_ENGINE=$HOME/Dev5/engine/src
+export LOCAL_ENGINE=linux_debug_unopt_riscv64
 
+export PKG_CONFIG_PATH=$R5_PKG_CONFIG_PATH
+export CMAKE_TOOLCHAIN_FILE=$HOME/Dev5/fulkan/cmake/toolchain/linux_riscv64.cmake
+export CMAKE_SYSROOT=$R5_SYSROOT
 export CMAKE_GENERATOR=Ninja
+export CXX=clang++
+export LDFLAGS=-fuse-ld=lld

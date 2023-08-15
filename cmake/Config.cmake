@@ -15,6 +15,7 @@ set(SPDLOG_ROOT ${ATT_ROOT}/depot/spdlog)
 set(PYBIND11_ROOT ${ATT_ROOT}/depot/pybind11)
 set(GLM_ROOT ${ATT_ROOT}/depot/glm)
 set(SDL_ROOT ${ATT_ROOT}/depot/sdl)
+set(GLAD_ROOT ${ATT_ROOT}/src/glad)
 
 if(DEFINED ENV{FLUTTER_ENGINE})
     #set(ENGINE_OUT $ENV{FLUTTER_ENGINE}/out/host_debug_unopt)

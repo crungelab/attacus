@@ -3,9 +3,10 @@
 
 #include <spdlog/spdlog.h>
 
+#include <glad/glad.h>
 #include "SDL.h"
 #include "SDL_syswm.h"
-#include <SDL_opengles2.h>
+//#include <SDL_opengles2.h>
 
 #include "gfx_view.h"
 
@@ -13,9 +14,6 @@
 
 namespace attacus
 {
-
-  void *GfxView::current_context_ = nullptr;
-  void *GfxView::gfx_context_ = nullptr;
 
   GfxView::GfxView(View &parent, ViewParams params) : View(parent, params),
                                                       time_offset_(0)
@@ -90,6 +88,10 @@ namespace attacus
 
   void GfxView::CreateGfx()
   {
+    gl_proc_resolver_ = (GLADloadproc)SDL_GL_GetProcAddress;
+    int version = gladLoadGLES2Loader(gl_proc_resolver_);
+    //std::cout << std::format("OpenGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+
     if (!gfx_context_)
     {
       gfx_context_ = CreateContext();

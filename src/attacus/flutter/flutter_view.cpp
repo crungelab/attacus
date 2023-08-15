@@ -9,9 +9,10 @@ namespace fs = std::filesystem;
 
 #include <spdlog/spdlog.h>
 
+#include <glad/glad.h>
 #include <SDL.h>
 #include <SDL_syswm.h>
-#include <SDL_opengles2.h>
+//#include <SDL_opengles2.h>
 
 #include <attacus/app.h>
 
@@ -21,7 +22,7 @@ namespace fs = std::filesystem;
 #include "flutter_view.h"
 
 // TODO: Fix:  Depends on OpenGL
-//#include "compositor/gl/compositor_gl.h"
+#include "compositor/gl/compositor_gl.h"
 
 #include "components/cursor.h"
 #include "components/mouse_input.h"
@@ -39,7 +40,7 @@ namespace attacus
         messenger_ = new FlutterMessenger(*this);
         runner_ = new FlutterRunner(*this);
 
-        //compositor_ = new CompositorGL(*this);
+        compositor_ = new CompositorGL(*this);
 
         cursor_ = new CursorComponent(*this);
         mouseInput_ = new MouseInput(*this);
@@ -139,7 +140,8 @@ namespace attacus
             if (strncmp(name, "egl", 3) == 0) {
                 func = SDL_EGL_GetProcAddress(name);
             } else {
-                func = SDL_GL_GetProcAddress(name);
+                //func = SDL_GL_GetProcAddress(name);
+                return self.gl_proc_resolver_(name);
             }
             return (void*)func;
         };
@@ -164,7 +166,8 @@ namespace attacus
             FlutterView &self = *static_cast<FlutterView *>(user_data);
             self.messenger().Receive(*message);
         };
-        args.custom_task_runners = &runner_->custom_task_runners;
+        //TODO: Flutter embedder has a bug using custom task runners in debug mode
+        //args.custom_task_runners = &runner_->custom_task_runners;
 
         //args.compositor = compositor().InitCompositor();
     }
@@ -200,7 +203,7 @@ namespace attacus
         messenger().Create();
         runner().Create();
 
-        //compositor().Create();
+        compositor().Create();
 
         cursor().Create();
         mouseInput().Create();

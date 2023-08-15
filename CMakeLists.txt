@@ -51,6 +51,8 @@ set(SDL_WAYLAND ${ATT_WM_WAYLAND} CACHE BOOL "Enable Wayland support" FORCE)
 set(SDL_KMSDRM ${ATT_WM_DRM} CACHE BOOL "Enable DRM/KMS support" FORCE)
 set(SDL_LIBUDEV ${ATT_WM_DRM} CACHE BOOL "Enable libudev support" FORCE)
 
+set(UDEV_LIB_SONAME libudev.so)
+
 if(${HAS_SDL})
 add_subdirectory(depot/sdl)
 endif() #HAS_SDL
@@ -59,6 +61,11 @@ endif() #HAS_SDL
 # Glad
 #
 if(${ATT_RENDERER_GL})
+    #add_subdirectory(${GLAD_ROOT}/cmake glad)
+    #glad_add_library(glad_gl_core_45 STATIC API gl:core=4.5)
+    if(${HAS_GLAD})
+    add_subdirectory(src/glad)
+    endif() #HAS_GLAD
 endif()
 
 #
