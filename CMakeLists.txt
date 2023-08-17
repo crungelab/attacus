@@ -41,7 +41,7 @@ set(SDL_TEST OFF CACHE BOOL "Build the SDL2_test library" FORCE)
 set(SDL_SHARED OFF CACHE BOOL "Build a shared version of the library" FORCE)
 set(SDL_STATIC_PIC ON CACHE BOOL "Static version of the library should be built with Position Independent Code" FORCE)
 
-set(SDL_RENDER OFF CACHE BOOL "Use render subsystem" FORCE)
+#set(SDL_RENDER OFF CACHE BOOL "Use render subsystem" FORCE)
 set(SDL_AUDIO OFF CACHE BOOL "Use audio subsystem" FORCE)
 set(SDL_HAPTIC OFF CACHE BOOL "Use haptic subsystem" FORCE)
 set(HIDAPI OFF CACHE BOOL "Use HIDAPI for low level joystick drivers" FORCE)
@@ -61,11 +61,9 @@ endif() #HAS_SDL
 # Glad
 #
 if(${ATT_RENDERER_GL})
-    #add_subdirectory(${GLAD_ROOT}/cmake glad)
-    #glad_add_library(glad_gl_core_45 STATIC API gl:core=4.5)
     if(${HAS_GLAD})
-    add_subdirectory(src/glad)
-    endif() #HAS_GLAD
+        add_subdirectory(src/glad)
+    endif()
 endif()
 
 #

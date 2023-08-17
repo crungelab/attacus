@@ -84,7 +84,7 @@ namespace attacus
         config.open_gl.struct_size = sizeof(config.open_gl);
         config.open_gl.make_current = [](void *userdata) -> bool
         {
-            spdlog::debug("make_current");
+            //spdlog::debug("make_current");
             FlutterView &self = *static_cast<FlutterView *>(userdata);
             auto window = self.sdl_window_;
             if (SDL_GL_MakeCurrent(window, self.context_) < 0)
@@ -167,6 +167,7 @@ namespace attacus
             self.messenger().Receive(*message);
         };
         //TODO: Flutter embedder has a bug using custom task runners in debug mode
+        //https://github.com/flutter/flutter/issues/129533
         //args.custom_task_runners = &runner_->custom_task_runners;
 
         //args.compositor = compositor().InitCompositor();

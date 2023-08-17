@@ -62,22 +62,6 @@ namespace attacus
       return nullptr;
     }
 
-    typedef const GLubyte *(*PFNGLGETSTRINGPROC)(GLenum name);
-    PFNGLGETSTRINGPROC my_glGetString = (PFNGLGETSTRINGPROC)SDL_GL_GetProcAddress("glGetString");
-    if (!my_glGetString)
-    {
-      printf("Failed to retrieve function pointer for glGetString.\n");
-    }
-    const GLubyte *version = my_glGetString(GL_VERSION);
-    if (version)
-    {
-      printf("OpenGL Version: %s\n", version);
-    }
-    else
-    {
-      printf("Failed to retrieve OpenGL version.\n");
-    }
-
     /*if(SDL_GL_MakeCurrent(sdl_window_, nullptr) < 0)
     {
       spdlog::error("CreateContext:  Can't clear opengl context: {}\n", SDL_GetError());
@@ -88,10 +72,6 @@ namespace attacus
 
   void GfxView::CreateGfx()
   {
-    gl_proc_resolver_ = (GLADloadproc)SDL_GL_GetProcAddress;
-    int version = gladLoadGLES2Loader(gl_proc_resolver_);
-    //std::cout << std::format("OpenGL {}.{} loaded\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
-
     if (!gfx_context_)
     {
       gfx_context_ = CreateContext();
@@ -100,6 +80,15 @@ namespace attacus
         return;
       }
     }
+
+    gl_proc_resolver_ = (GLADloadproc)SDL_GL_GetProcAddress;
+
+    if (gladLoadGLES2Loader(gl_proc_resolver_) == 0)
+    {
+      spdlog::error("Failed to load GLES extensions\n");
+      return;
+    }
+
     if (SDL_GL_SetSwapInterval(1) < 0)
     {
       spdlog::error("Couldn't enable vsync: {}\n", SDL_GetError());
