@@ -9,8 +9,7 @@ function(USES_SDL THIS)
     USES_STD(${THIS})
     USES_GLAD(${THIS})
     target_include_directories(${THIS} PRIVATE
-        #${SDL_ROOT}/include
-        ${SDL_ROOT}/include/SDL3
+        ${SDL_ROOT}/include
     )
     target_precompile_headers(${THIS} PRIVATE ${SDL_ROOT}/include/SDL3/SDL.h)
     target_link_libraries(${THIS} PRIVATE SDL3-static)

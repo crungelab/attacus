@@ -3,8 +3,8 @@
 
 #include <spdlog/spdlog.h>
 
-#include <SDL.h>
-#include "SDL_syswm.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_syswm.h>
 
 #include "gfx_window.h"
 
@@ -54,6 +54,8 @@ namespace attacus
         //sdl_window_ = SDL_CreateWindowWithPosition(name_.c_str(), x(), y(), width(), height(), flags_ | SDL_WINDOW_OPENGL);
         sdl_window_ = SDL_CreateWindow(name_.c_str(), width(), height(), flags_ | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 
+        spdlog::debug("SDL Error during window creation: {}\n", SDL_GetError());
+
         if (sdl_window_ == nullptr)
         {
             spdlog::error("SDL Window could not be created: {}\n", SDL_GetError());
@@ -64,6 +66,21 @@ namespace attacus
         MapWindow(windowId(), this);
 
         SDL_SetWindowData(sdl_window_, "Window", this);
+
+        /*{
+            SDL_DisplayID display = SDL_GetPrimaryDisplay();
+            int num_modes = 0;
+            const SDL_DisplayMode **modes = SDL_GetFullscreenDisplayModes(display, &num_modes);
+            if (modes) {
+                for (int i = 0; i < num_modes; ++i) {
+                    const SDL_DisplayMode *mode = modes[i];
+                    SDL_Log("Display %" SDL_PRIu32 " mode %d: %dx%d@%gx %gHz\n",
+                            display, i, mode->w, mode->h, mode->pixel_density, mode->refresh_rate);
+                }
+                SDL_free(modes);
+            }
+        }*/
+
     }
 
     void GfxWindow::PreRender()

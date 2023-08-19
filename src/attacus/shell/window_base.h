@@ -14,7 +14,8 @@ struct WindowParams : ViewParams {
         Size _size = Size(800,600),
         Point _origin = Point(SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED),
         std::string _name = "Attacus",
-        uint32_t _flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
+        //uint32_t _flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
+        uint32_t _flags = SDL_WINDOW_HIGH_PIXEL_DENSITY
     ) : ViewParams(_size, _origin, _name) {
         flags = _flags;
     }

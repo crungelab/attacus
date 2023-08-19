@@ -3,8 +3,8 @@
 
 #include <spdlog/spdlog.h>
 
-#include <SDL.h>
-#include "SDL_syswm.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_syswm.h>
 
 #include "view.h"
 

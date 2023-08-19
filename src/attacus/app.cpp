@@ -4,8 +4,9 @@
 
 #include <spdlog/spdlog.h>
 
-#include "SDL.h"
-#include "SDL_syswm.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_syswm.h>
+#include "SDL_mouse.h"
 
 #include "app.h"
 
@@ -25,12 +26,16 @@ namespace attacus
 
     void App::Create()
     {
-        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
+        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "kmsdrm");
+        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
+        SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
+        
+        if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
-            printf("SDL could not initialize. SDL_Error: %s\n", SDL_GetError());
+            printf("SDL could not initialize video. SDL_Error: %s\n", SDL_GetError());
             return;
         }
-
+        //SDL_Mouse *mouse = SDL_GetMouse();
         /*if (SDL_GL_LoadLibrary(nullptr) < 0)
         {
             printf("SDL_GL_LoadLibrary failed. SDL_Error: %s\n", SDL_GetError());

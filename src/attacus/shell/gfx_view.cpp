@@ -4,8 +4,8 @@
 #include <spdlog/spdlog.h>
 
 #include <glad/glad.h>
-#include "SDL.h"
-#include "SDL_syswm.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_syswm.h>
 //#include <SDL_opengles2.h>
 
 #include "gfx_view.h"
@@ -81,9 +81,7 @@ namespace attacus
       }
     }
 
-    gl_proc_resolver_ = (GLADloadproc)SDL_GL_GetProcAddress;
-
-    if (gladLoadGLES2Loader(gl_proc_resolver_) == 0)
+    if (gladLoadGLES2Loader((GLADloadproc)SDL_GL_GetProcAddress) == 0)
     {
       spdlog::error("Failed to load GLES extensions\n");
       return;

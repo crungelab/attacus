@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <spdlog/spdlog.h>
+
 #include <attacus/flutter/encodable_value.h>
 #include <attacus/flutter/flutter_view.h>
 #include <attacus/flutter/standard_method_channel.h>
@@ -35,6 +37,7 @@ namespace attacus
         event.timestamp = timestamp;
 
         FlutterEngineSendPointerEvent(flutter().engine_, &event, 1);
+
         return true;
     }
 
@@ -84,7 +87,8 @@ namespace attacus
             {
                 mouseDown = true;
                 mouseId = e.button.which;
-                buttons_ = buttons_ | (static_cast<int64_t>(1) << e.button.which);
+                buttons_ = buttons_ | (static_cast<int64_t>(1) << (e.button.button - 1));
+                spdlog::debug("Mouse buttons: {}", buttons_);
                 lastMouseX = e.button.x;
                 lastMouseY = e.button.y;
                 return UpdatePointer(FlutterPointerPhase::kDown, e.button.timestamp, e.button.x, e.button.y);
@@ -98,7 +102,8 @@ namespace attacus
             if (mouseDown)
             {
                 mouseDown = false;
-                buttons_ = buttons_ & ~(1 << e.button.which);
+                buttons_ = buttons_ & ~(1 << (e.button.button - 1));
+                spdlog::debug("Mouse buttons: {}", buttons_);
                 lastMouseX = e.button.x;
                 lastMouseY = e.button.y;
                 return UpdatePointer(FlutterPointerPhase::kUp, e.button.timestamp, e.button.x, e.button.y);

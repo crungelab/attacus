@@ -1,8 +1,8 @@
 #include <cstring>
 
-#include "SDL.h"
+#include <SDL3/SDL.h>
 #define SDL_ENABLE_SYSWM_X11
-#include "SDL_syswm.h"
+#include <SDL3/SDL_syswm.h>
 
 #include "x11_window.h"
 

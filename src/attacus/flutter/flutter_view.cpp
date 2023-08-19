@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 #include <spdlog/spdlog.h>
 
 #include <glad/glad.h>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <SDL_syswm.h>
 //#include <SDL_opengles2.h>
 
@@ -140,8 +140,7 @@ namespace attacus
             if (strncmp(name, "egl", 3) == 0) {
                 func = SDL_EGL_GetProcAddress(name);
             } else {
-                //func = SDL_GL_GetProcAddress(name);
-                return self.gl_proc_resolver_(name);
+                func = SDL_GL_GetProcAddress(name);
             }
             return (void*)func;
         };
