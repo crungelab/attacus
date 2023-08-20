@@ -9,11 +9,13 @@ set(_ ${CMAKE_CURRENT_SOURCE_DIR}
 
 set(GLAD_HEADERS
     ${_}/include/glad/glad.h
+    ${_}/include/glad/glad_egl.h
     ${_}/include/KHR/khrplatform.h
 )
 
 set(GLAD_SRC
     ${_}/src/glad.c
+    ${_}/src/glad_egl.c
 )
 
 add_library(${THIS} STATIC ${GLAD_SRC} ${GLAD_HEADERS})

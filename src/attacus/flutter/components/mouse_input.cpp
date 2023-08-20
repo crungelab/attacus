@@ -88,7 +88,7 @@ namespace attacus
                 mouseDown = true;
                 mouseId = e.button.which;
                 buttons_ = buttons_ | (static_cast<int64_t>(1) << (e.button.button - 1));
-                spdlog::debug("Mouse buttons: {}", buttons_);
+                //spdlog::debug("Mouse buttons: {}", buttons_);
                 lastMouseX = e.button.x;
                 lastMouseY = e.button.y;
                 return UpdatePointer(FlutterPointerPhase::kDown, e.button.timestamp, e.button.x, e.button.y);
@@ -103,7 +103,7 @@ namespace attacus
             {
                 mouseDown = false;
                 buttons_ = buttons_ & ~(1 << (e.button.button - 1));
-                spdlog::debug("Mouse buttons: {}", buttons_);
+                //spdlog::debug("Mouse buttons: {}", buttons_);
                 lastMouseX = e.button.x;
                 lastMouseY = e.button.y;
                 return UpdatePointer(FlutterPointerPhase::kUp, e.button.timestamp, e.button.x, e.button.y);

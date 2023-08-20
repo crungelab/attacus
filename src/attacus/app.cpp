@@ -16,7 +16,6 @@ namespace attacus
     App::App(WindowParams params, App *parent) : GfxWindow(*parent, params),
                                                  state_(State::kRunning)
     {
-        //TODO: Just putting it here until I can figure out a better home for it
         spdlog::set_level(spdlog::level::debug); // Set global log level to debug
     }
 
@@ -35,7 +34,6 @@ namespace attacus
             printf("SDL could not initialize video. SDL_Error: %s\n", SDL_GetError());
             return;
         }
-        //SDL_Mouse *mouse = SDL_GetMouse();
         /*if (SDL_GL_LoadLibrary(nullptr) < 0)
         {
             printf("SDL_GL_LoadLibrary failed. SDL_Error: %s\n", SDL_GetError());

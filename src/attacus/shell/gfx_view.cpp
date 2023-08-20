@@ -4,9 +4,10 @@
 #include <spdlog/spdlog.h>
 
 #include <glad/glad.h>
+#include <glad/glad_egl.h>
+
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_syswm.h>
-//#include <SDL_opengles2.h>
 
 #include "gfx_view.h"
 
@@ -79,6 +80,12 @@ namespace attacus
       {
         return;
       }
+    }
+
+    if (gladLoadEGLLoader((GLADloadproc)SDL_EGL_GetProcAddress) == 0)
+    {
+      spdlog::error("Failed to load EGL extensions\n");
+      return;
     }
 
     if (gladLoadGLES2Loader((GLADloadproc)SDL_GL_GetProcAddress) == 0)
