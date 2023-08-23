@@ -66,10 +66,12 @@ set(ATT_COMPILE_DEFS
 )
 
 if(${ATT_WM_X11})
+    message("Using X11")
     set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
         SDL_VIDEO_DRIVER_X11=1
     )
 elseif(${ATT_WM_WAYLAND})
+    message("Using Wayland")
     set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
         SDL_VIDEO_DRIVER_WAYLAND=1
     )
@@ -81,6 +83,7 @@ elseif(${ATT_WM_WAYLAND})
         )
     endif()
 elseif(${ATT_WM_DRM})
+    message("Using DRM/KMS")
     set(ATT_COMPILE_DEFS ${ATT_COMPILE_DEFS}
         SDL_VIDEO_DRIVER_KMSDRM=1
         SDL_DISABLE_SYSWM_X11=1

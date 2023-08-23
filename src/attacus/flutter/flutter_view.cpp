@@ -44,12 +44,12 @@ std::list<FlutterRect> damage_history_;
 // Keeps track of the existing damage associated with each FBO ID
 std::unordered_map<intptr_t, FlutterRect *> existing_damage_map_;
 
-EGLDisplay display_;
-EGLSurface surface_;
+// EGLDisplay display_;
+// EGLSurface surface_;
 
 // Auxiliary function used to transform a FlutterRect into the format that is
 // expected by the EGL functions (i.e. array of EGLint).
-static std::array<EGLint, 4> RectToInts(const FlutterRect rect)
+static std::array<EGLint, 4> RectToInts(EGLDisplay display_, EGLSurface surface_, const FlutterRect rect)
 {
     EGLint height;
     eglQuerySurface(display_, surface_, EGL_HEIGHT, &height);
@@ -75,7 +75,9 @@ static void JoinFlutterRect(FlutterRect *rect, FlutterRect additional_rect)
 // requested extension name.
 static bool HasExtension(const char *extensions, const char *name)
 {
+    // spdlog::debug("Extensions: {}", extensions);
     const char *r = strstr(extensions, name);
+    // spdlog::debug("HasExtension: {}", r);
     auto len = strlen(name);
     // check that the extension name is terminated by space or null terminator
     return r != nullptr && (r[len] == ' ' || r[len] == 0);
@@ -98,11 +100,6 @@ namespace attacus
 
         textureRegistrar_ = new TextureRegistrar(*this);
         viewRegistry_ = new ViewRegistry(*this);
-
-        // Get the display and surface variables.
-        display_ = SDL_EGL_GetCurrentEGLDisplay();
-        surface_ = SDL_EGL_GetWindowEGLSurface(sdl_window_);
-
     }
 
     FlutterView::~FlutterView()
@@ -111,6 +108,7 @@ namespace attacus
 
     void FlutterView::CreateGfx()
     {
+
         GfxView::CreateGfx();
 
         resource_context_ = CreateContext();
@@ -182,6 +180,17 @@ namespace attacus
             [](void *userdata, const FlutterPresentInfo *info) -> bool
         {
             FlutterView &self = *static_cast<FlutterView *>(userdata);
+
+            // Get the display and surface variables.
+            EGLDisplay display_ = SDL_EGL_GetCurrentEGLDisplay();
+            if (display_ == nullptr)
+                spdlog::error("SDL_EGL_GetCurrentEGLDisplay: {}", SDL_GetError());
+
+            // EGLSurface surface_ = SDL_EGL_GetWindowEGLSurface(self.sdl_window_);
+            EGLSurface surface_ = eglGetCurrentSurface(EGL_DRAW);
+            if (surface_ == nullptr)
+                spdlog::error("SDL_EGL_GetWindowEGLSurface: {}", SDL_GetError());
+
             // Free the existing damage that was allocated to this frame.
             if (existing_damage_map_[info->fbo_id] != nullptr)
             {
@@ -196,6 +205,7 @@ namespace attacus
             PFNEGLSETDAMAGEREGIONKHRPROC set_damage_region_ = nullptr;
             if (HasExtension(extensions, "EGL_KHR_partial_update"))
             {
+                spdlog::debug("EGL_KHR_partial_update");
                 set_damage_region_ = reinterpret_cast<PFNEGLSETDAMAGEREGIONKHRPROC>(
                     SDL_EGL_GetProcAddress("eglSetDamageRegionKHR"));
             }
@@ -204,12 +214,14 @@ namespace attacus
             PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC swap_buffers_with_damage_ = nullptr;
             if (HasExtension(extensions, "EGL_EXT_swap_buffers_with_damage"))
             {
+                spdlog::debug("EGL_EXT_swap_buffers_with_damage");
                 swap_buffers_with_damage_ =
                     reinterpret_cast<PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC>(
                         SDL_EGL_GetProcAddress("eglSwapBuffersWithDamageEXT"));
             }
             else if (HasExtension(extensions, "EGL_KHR_swap_buffers_with_damage"))
             {
+                spdlog::debug("EGL_KHR_swap_buffers_with_damage");
                 swap_buffers_with_damage_ =
                     reinterpret_cast<PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC>(
                         SDL_EGL_GetProcAddress("eglSwapBuffersWithDamageKHR"));
@@ -217,8 +229,9 @@ namespace attacus
 
             if (set_damage_region_)
             {
+                spdlog::debug("set_damage_region_");
                 // Set the buffer damage as the damage region.
-                auto buffer_rects = RectToInts(info->buffer_damage.damage[0]);
+                auto buffer_rects = RectToInts(display_, surface_, info->buffer_damage.damage[0]);
                 set_damage_region_(display_, surface_, buffer_rects.data(), 1);
             }
 
@@ -231,25 +244,40 @@ namespace attacus
 
             if (swap_buffers_with_damage_)
             {
+                spdlog::debug("swap_buffers_with_damage_");
                 // Swap buffers with frame damage.
-                auto frame_rects = RectToInts(info->frame_damage.damage[0]);
+                auto frame_rects = RectToInts(display_, surface_, info->frame_damage.damage[0]);
                 return swap_buffers_with_damage_(display_, surface_, frame_rects.data(),
                                                  1);
             }
             else
             {
-                // If the required extensions for partial repaint were not provided, do
-                // full repaint.
-                return eglSwapBuffers(display_, surface_);
-                //return SDL_GL_SwapWindow(self.sdl_window_);
+                // spdlog::debug("full repaint");
+                //  If the required extensions for partial repaint were not provided, do
+                //  full repaint.
+                // return eglSwapBuffers(display_, surface_);
+                return SDL_GL_SwapWindow(self.sdl_window_);
             }
         };
+
+        //config.open_gl.populate_existing_damage = nullptr;
 
         config.open_gl.populate_existing_damage =
             [](void *userdata, intptr_t fbo_id,
                FlutterDamage *existing_damage) -> void
         {
             FlutterView &self = *static_cast<FlutterView *>(userdata);
+
+            // Get the display and surface variables.
+            EGLDisplay display_ = SDL_EGL_GetCurrentEGLDisplay();
+            if (display_ == nullptr)
+                spdlog::error("SDL_EGL_GetCurrentEGLDisplay: {}", SDL_GetError());
+
+            //EGLSurface surface_ = SDL_EGL_GetWindowEGLSurface(self.sdl_window_);
+            EGLSurface surface_ = eglGetCurrentSurface(EGL_DRAW);
+            if (surface_ == nullptr)
+                spdlog::error("SDL_EGL_GetWindowEGLSurface: {}", SDL_GetError());
+
             // Given the FBO age, create existing damage region by joining all frame
             // damages since FBO was last used
             EGLint age;
@@ -293,11 +321,18 @@ namespace attacus
             }
         };
 
-        config.open_gl.fbo_callback = [](void *userdata) -> uint32_t
+        /*config.open_gl.fbo_callback = [](void *userdata) -> uint32_t
         {
             return 0; // FBO0
+        };*/
+
+        config.open_gl.fbo_with_frame_info_callback =
+            [](void *userdata, const FlutterFrameInfo *frame_info) -> uint32_t
+        {
+            FlutterView &self = *static_cast<FlutterView *>(userdata);
+            return 0; // FBO0
         };
-        
+
         config.open_gl.fbo_reset_after_present = true;
         // config.open_gl.fbo_reset_after_present = false;
 
@@ -323,8 +358,6 @@ namespace attacus
             FlutterView &self = *static_cast<FlutterView *>(userdata);
             return self.textureRegistrar().CopyTexture(texId, width, height, texOut);
         };
-
-        config.open_gl.populate_existing_damage = nullptr;
     }
 
     void FlutterView::InitProjectArgs(FlutterProjectArgs &args)
