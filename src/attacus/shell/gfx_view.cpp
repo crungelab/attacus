@@ -80,6 +80,7 @@ namespace attacus
           spdlog::error("CreateContext:  Can't clear opengl context: {}\n", SDL_GetError());
           return nullptr;
         }*/
+
         return context;
     }
 

@@ -25,7 +25,8 @@ namespace attacus
 
     void App::Create()
     {
-        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "kmsdrm");
+        //SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "kmsdrm");
+        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland");
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
         SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
         

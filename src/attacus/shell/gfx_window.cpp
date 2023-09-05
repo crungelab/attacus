@@ -52,8 +52,8 @@ namespace attacus
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles2");
         SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
 
-        //sdl_window_ = SDL_CreateWindowWithPosition(name_.c_str(), x(), y(), width(), height(), flags_ | SDL_WINDOW_OPENGL);
-        sdl_window_ = SDL_CreateWindow(name_.c_str(), width(), height(), flags_ | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
+        sdl_window_ = SDL_CreateWindowWithPosition(name_.c_str(), x(), y(), width(), height(), flags_ | SDL_WINDOW_OPENGL);
+        //sdl_window_ = SDL_CreateWindow(name_.c_str(), width(), height(), flags_ | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 
         const char *error = SDL_GetError();
         if (error && *error) {

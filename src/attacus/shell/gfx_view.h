@@ -19,10 +19,10 @@ public:
 
     // Accessors
     // Data members
-    void* current_context_;
-    void* gfx_context_;
+    void* current_context_ = nullptr;
+    void* gfx_context_ = nullptr;
 
-    int64_t time_offset_;
+    int64_t time_offset_ = 0;
     bool capture_ = false;
 
 };
