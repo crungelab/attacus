@@ -24,11 +24,11 @@ class GLM(GitSolution):
 #TODO: Need to make this multi-platform
 class FlutterEngine(ZipSolution):
 	path = 'depot/flutter-engine'
-	url = 'https://storage.googleapis.com/flutter_infra_release/flutter/45f6e009110df4f34ec2cf99f63cf73b71b7a420/linux-x64/linux-x64-embedder.zip'
+	url = 'https://storage.googleapis.com/flutter_infra_release/flutter/54a7145303f0dd9d0f93424a2e124eb4abef5091/linux-x64/linux-x64-embedder.zip'
 
 class FlutterArtifacts(ZipSolution):
     path = "depot/flutter-artifacts"
-    url = "https://storage.googleapis.com/flutter_infra_release/flutter/45f6e009110df4f34ec2cf99f63cf73b71b7a420/linux-x64/artifacts.zip"
+    url = "https://storage.googleapis.com/flutter_infra_release/flutter/54a7145303f0dd9d0f93424a2e124eb4abef5091/linux-x64/artifacts.zip"
 
 solutions = [
 	GoogleTest,

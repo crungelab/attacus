@@ -1,5 +1,5 @@
 [build-system]
-requires = ["cxbuild==0.1.2", "setuptools", "wheel"]
+requires = ["cxbuild==0.1.6", "setuptools", "wheel"]
 build-backend = "cxbuild.backend"
 
 [project]
@@ -24,11 +24,12 @@ classifiers = [
 ]
 
 dependencies = [
-    "loguru ~=0.7.0",
-    "platformdirs ~=3.5.1",
+    "loguru ~=0.7.2",
+    "platformdirs ~=4.1.0",
     "requests ~=2.31.0",
-    "rich ~=13.3.5",
-    "click ~=8.1.3"
+    "rich ~=13.7.0",
+    "click ~=8.1.7",
+    "tomli ~=2.0.1"
 ]
 
 [project.optional-dependencies]
@@ -49,7 +50,7 @@ changelog = "https://github.com/crungelab/attacus/blob/main/CHANGELOG.md"
 path = "attacus/__about__.py"
 
 [tool.hatch.envs.default]
-dependencies = ["procure==0.1.1", "cxbuild==0.1.2", "cmake", "build", "pytest", "pytest-cov"]
+dependencies = ["procure==0.1.2", "cxbuild==0.1.6", "cmake", "build", "pytest", "pytest-cov"]
 
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=deeper --cov=tests {args}"

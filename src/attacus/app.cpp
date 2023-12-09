@@ -5,7 +5,6 @@
 #include <spdlog/spdlog.h>
 
 #include "SDL.h"
-#include "SDL_syswm.h"
 
 #include "app.h"
 
@@ -25,7 +24,6 @@ namespace attacus
 
     void App::Create()
     {
-        GfxWindow::Create();
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
             printf("SDL could not initialize. SDL_Error: %s\n", SDL_GetError());
@@ -38,7 +36,9 @@ namespace attacus
             return;
         }
 
-        RegisterResizer();
+        GfxWindow::Create();
+
+        //RegisterResizer();
     }
 
     void App::Destroy()
@@ -130,7 +130,7 @@ namespace attacus
         if (event->type == SDL_EVENT_WINDOW_RESIZED)
         {
             SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
-            Window *window = static_cast<Window *>(SDL_GetWindowData(win, "Window"));
+            Window *window = static_cast<Window *>(SDL_GetProperty(SDL_GetWindowProperties(win), "Window", nullptr));
             if (window == nullptr)
             {
                 return 0;

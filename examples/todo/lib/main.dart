@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import './protos/todo/todo.pb.dart';
+
+var logger = Logger();
 
 void main() {
   runApp(const MyApp());
@@ -14,10 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeData.dark(useMaterial3: true),
       home: const HomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             result.map((dynamic item) => TodoItem.fromBuffer(item)).toList();
       });
     } on PlatformException catch (e) {
-      print('Failed to load todo items: $e');
+      logger.d('Failed to load todo items: $e');
     }
   }*/
 
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
         _items = todoItems.items;
       });
     } on PlatformException catch (e) {
-      print('Failed to load todo items: $e');
+      logger.d('Failed to load todo items: $e');
     }
   }
 
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         _items.add(TodoItem.fromBuffer(result));
       });
     } on PlatformException catch (e) {
-      print('Failed to add todo item: $e');
+      logger.d('Failed to add todo item: $e');
     }
   }*/
 
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
         _items.add(TodoItem.fromBuffer(result));
       });
     } on PlatformException catch (e) {
-      print('Failed to add todo item: $e');
+      logger.d('Failed to add todo item: $e');
     }
   }
 

@@ -1,6 +1,5 @@
 #include <windows.h>
 #define SDL_ENABLE_SYSWM_WINDOWS
-#include <SDL_syswm.h>
 
 #include "win32_window.h"
 

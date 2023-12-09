@@ -3,7 +3,6 @@
 #include <spdlog/spdlog.h>
 
 #include <SDL.h>
-#include "SDL_syswm.h"
 
 #include "window_base.h"
 
@@ -32,7 +31,7 @@ void WindowBase::Create() {
 }
 
 void WindowBase::CreateSDLWindow() {
-    sdl_window_ = SDL_CreateWindowWithPosition(name_.c_str(), x(), y(), width(), height(), flags_);
+    sdl_window_ = SDL_CreateWindow(name_.c_str(), width(), height(), flags_);
 
     if (sdl_window_ == nullptr) {
         spdlog::error("Window could not be created: {}\n", SDL_GetError());
@@ -42,7 +41,7 @@ void WindowBase::CreateSDLWindow() {
     SetWindowId(SDL_GetWindowID(sdl_window_));
     MapWindow(windowId(), this);
 
-    SDL_SetWindowData(sdl_window_, "Window", this);
+    SDL_SetProperty(SDL_GetWindowProperties(sdl_window_), "Window", this);
 }
 
 void WindowBase::Show() {

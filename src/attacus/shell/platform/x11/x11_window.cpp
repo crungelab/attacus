@@ -1,8 +1,6 @@
 #include <cstring>
 
 #include "SDL.h"
-#define SDL_ENABLE_SYSWM_X11
-#include "SDL_syswm.h"
 
 #include "x11_window.h"
 
@@ -12,9 +10,7 @@ X11Window::~X11Window() {
 }
 
 XWindow X11Window::GetNativeHandle() {
-    SDL_SysWMinfo wmInfo;
-    SDL_GetWindowWMInfo(sdl_window_, &wmInfo, SDL_SYSWM_CURRENT_VERSION);
-    XWindow hwnd = wmInfo.info.x11.window;
+    XWindow hwnd = (XWindow)SDL_GetProperty(SDL_GetWindowProperties(sdl_window_), "SDL.window.x11.window", 0);
     return hwnd;
 }
 

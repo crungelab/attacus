@@ -10,7 +10,6 @@ namespace fs = std::filesystem;
 #include <spdlog/spdlog.h>
 
 #include <SDL.h>
-#include <SDL_syswm.h>
 
 #include <attacus/app.h>
 

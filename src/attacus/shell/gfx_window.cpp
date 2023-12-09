@@ -4,7 +4,6 @@
 #include <spdlog/spdlog.h>
 
 #include <SDL.h>
-#include "SDL_syswm.h"
 
 #include "gfx_window.h"
 
@@ -42,7 +41,7 @@ namespace attacus
 
     SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
-    sdl_window_ = SDL_CreateWindowWithPosition(name_.c_str(), x(), y(), width(), height(), flags_ | SDL_WINDOW_OPENGL);
+    sdl_window_ = SDL_CreateWindow(name_.c_str(), width(), height(), flags_ | SDL_WINDOW_OPENGL);
 
     if (sdl_window_ == nullptr)
     {
@@ -53,7 +52,7 @@ namespace attacus
     SetWindowId(SDL_GetWindowID(sdl_window_));
     MapWindow(windowId(), this);
 
-    SDL_SetWindowData(sdl_window_, "Window", this);
+    SDL_SetProperty(SDL_GetWindowProperties(sdl_window_), "Window", this);
   }
 
   void GfxWindow::PreRender()

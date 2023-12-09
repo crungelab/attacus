@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "SDL.h"
-#include "SDL_syswm.h"
 
 #include "window.h"
 #include <attacus/flutter/flutter_view.h>

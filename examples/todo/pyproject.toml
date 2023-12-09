@@ -6,8 +6,8 @@ authors = [{ name = "Kurtis Fields", email = "kurtisfields@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
-    "loguru ==0.7.0",
-    "protobuf ~=4.23.2"
+    "loguru ==0.7.2",
+    "protobuf ~=4.25.1"
 ]
 
 [tool.setuptools]

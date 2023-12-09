@@ -4,7 +4,6 @@
 #include <spdlog/spdlog.h>
 
 #include "SDL.h"
-#include "SDL_syswm.h"
 
 #include "gfx_view.h"
 
