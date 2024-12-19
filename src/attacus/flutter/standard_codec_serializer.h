@@ -52,10 +52,10 @@ class StandardCodecSerializer {
                                          ByteStreamReader* stream) const;
 
   // Reads the variable-length size from the current position in |stream|.
-  size_t ReadSize(ByteStreamReader* stream) const;
+  std::size_t ReadSize(ByteStreamReader* stream) const;
 
   // Writes the variable-length size encoding to |stream|.
-  void WriteSize(size_t size, ByteStreamWriter* stream) const;
+  void WriteSize(std::size_t size, ByteStreamWriter* stream) const;
 
  private:
   // Reads a fixed-type list whose values are of type T from the current

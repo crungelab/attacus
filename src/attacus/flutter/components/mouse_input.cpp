@@ -54,9 +54,9 @@ namespace attacus
         {
             float dx = e.wheel.x * wheelSensitivity_;
             float dy = -e.wheel.y * wheelSensitivity_;
-            UpdatePointer(FlutterPointerPhase::kDown, e.motion.timestamp, e.wheel.mouseX, e.wheel.mouseY, dx, dy);
-            UpdatePointer(FlutterPointerPhase::kMove, e.motion.timestamp, e.wheel.mouseX, e.wheel.mouseY, dx, dy);
-            UpdatePointer(FlutterPointerPhase::kUp, e.motion.timestamp, e.wheel.mouseX, e.wheel.mouseY, dx, dy);
+            UpdatePointer(FlutterPointerPhase::kDown, e.motion.timestamp, e.wheel.mouse_x, e.wheel.mouse_y, dx, dy);
+            UpdatePointer(FlutterPointerPhase::kMove, e.motion.timestamp, e.wheel.mouse_x, e.wheel.mouse_y, dx, dy);
+            UpdatePointer(FlutterPointerPhase::kUp, e.motion.timestamp, e.wheel.mouse_x, e.wheel.mouse_y, dx, dy);
         }
         case SDL_EVENT_MOUSE_MOTION:
         {

@@ -68,6 +68,7 @@ namespace attacus
       CompositorGL &self = *static_cast<CompositorGL *>(user_data);
       return self.CollectBackingStore(*renderer);
     };
+    compositor.present_view_callback = nullptr;
     compositor.present_layers_callback =
         [](const FlutterLayer **layers, size_t layers_count, void *user_data) -> bool
     {
