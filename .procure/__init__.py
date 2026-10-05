@@ -19,6 +19,10 @@ class Spdlog(GitSolution):
     url = "https://github.com/gabime/spdlog"
 
 
+class Json(GitSolution):
+    path = "depot/json"
+    url = "https://github.com/nlohmann/json"
+
 class SDL(GitSolution):
     path = "depot/sdl"
     url = "https://github.com/libsdl-org/SDL"
@@ -49,4 +53,4 @@ class FlutterArtifacts(ZipSolution):
     url = f"https://storage.googleapis.com/flutter_infra_release/flutter/{engine_version}/linux-x64/artifacts.zip"
 
 
-solutions = [GoogleTest, Spdlog, SDL, Pybind11, GLM, FlutterEngine, FlutterArtifacts]
+solutions = [GoogleTest, Spdlog, Json, SDL, Pybind11, GLM, FlutterEngine, FlutterArtifacts]
