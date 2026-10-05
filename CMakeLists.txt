@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.30...4.0 FATAL_ERROR)
 
 set(CMAKE_C_COMPILER "/usr/bin/clang")
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 set(CMAKE_CXX_FLAGS "-stdlib=libc++")
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 project(AttacusAll LANGUAGES CXX)
 
@@ -10,9 +11,7 @@ include(./cmake/Config.cmake)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /O2 /bigobj")
-#set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-#set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #
 # GLM
@@ -20,24 +19,23 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared library" FORCE)
 set(BUILD_STATIC_LIBS ON CACHE BOOL "Build static library" FORCE)
 
+add_subdirectory(depot/json)
+
 add_subdirectory(depot/glm)
 
 #
-# pybind11
+# Python / pybind11
 #
-if(${HAS_PYBIND11})
-set(-DCMAKE_CXX_STANDARD=20 -std=c++20)
-set(PYBIND11_PYTHON_VERSION 3.10)    
-find_package(Python COMPONENTS Interpreter Development)
-add_subdirectory(depot/pybind11)
-endif() #HAS_PYBIND11
-#
+set(PYBIND11_FINDPYTHON ON)
+find_package(Python 3.12 REQUIRED COMPONENTS Interpreter Development.Module Development.Embed)
+add_subdirectory(depot/pybind11 EXCLUDE_FROM_ALL)
+
 
 #
 # SDL - Minimal build for now
 #
 set(HAVE_LIBC ON)
-set(SDL_TEST OFF CACHE BOOL "Build the SDL2_test library" FORCE)
+set(SDL_TEST OFF CACHE BOOL "Build the SDL3_test library" FORCE)
 set(SDL_SHARED OFF CACHE BOOL "Build a shared version of the library" FORCE)
 set(SDL_STATIC_PIC ON CACHE BOOL "Static version of the library should be built with Position Independent Code" FORCE)
 
@@ -54,22 +52,10 @@ add_subdirectory(depot/sdl)
 endif() #HAS_SDL
 
 #
-# Glad
-#
-if(${ATT_RENDERER_GL})
-endif()
-
-#
 #Attacus
 #
-add_subdirectory(src/attacus)
-
-#
-#AttacusPy
-#
-if(${HAS_PY})
-add_subdirectory(src/attacus_py)
-endif() #HAS_PY
+add_subdirectory(src)
+add_subdirectory(tests)
 
 #
 #Examples
@@ -90,7 +76,3 @@ add_subdirectory(depot/googletest)
 #
 add_subdirectory(depot/spdlog)
 set_target_properties(spdlog PROPERTIES POSITION_INDEPENDENT_CODE ${ATT_STATIC_PIC})
-#
-#Tests
-#
-add_subdirectory(tests)

@@ -13,6 +13,7 @@ set(ATT_ROOT ${CMAKE_SOURCE_DIR})
 
 set(SPDLOG_ROOT ${ATT_ROOT}/depot/spdlog)
 set(PYBIND11_ROOT ${ATT_ROOT}/depot/pybind11)
+set(JSON_ROOT ${ATT_ROOT}/depot/json)
 set(GLM_ROOT ${ATT_ROOT}/depot/glm)
 set(SDL_ROOT ${ATT_ROOT}/depot/sdl)
 
@@ -81,10 +82,6 @@ elseif(${ATT_RENDERER_VULKAN})
         BGFX_CONFIG_RENDERER_OPENGLES=0
         BGFX_CONFIG_RENDERER_VULKAN=1
     )
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(BX_COMPATIBILITY ${BX_ROOT}/include/compat/msvc)
 endif()
 
 # Comment out items to minimize builds for testing

@@ -1,0 +1,73 @@
+# The crunge solution root: cxbuild builds and installs the projects listed below.
+# Not a package itself, so there is no [build-system] and hatch doesn't install it.
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "attacus-dev"
+version = "0.1.0"
+description = 'Flutter extension for Python'
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = []
+authors = [{ name = "Kurtis Fields", email = "kurtisfields@gmail.com" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[tool.cxbuild]
+# Modules whose checkout (two levels above their __init__.py) goes on CMAKE_PREFIX_PATH,
+# so CMake finds their config files even when they're installed editable.
+#plugins = ["cxbind"]
+
+projects = [
+  "attacus",
+]
+
+# --- environments -------------------------------------------------------------
+# depot    : procure only. Run first on a fresh checkout: the builds need depot/.
+# default  : daily work. All packages and the toolchain, editable.
+# pkg.<x>  : one isolated package, to catch undeclared dependencies.
+
+[tool.hatch.envs.default]
+python = "3.12"
+installer = "uv"
+skip-install = true  # the root is the solution, not a package
+workspace.members = [
+  # Build toolchain
+  "../cxbuild",
+  # Attacus packages
+  "attacus"
+]
+dependencies = ["uv", "pytest", "mypy"]
+
+[tool.hatch.envs.default.scripts]
+develop = "cxbuild develop {args}"   # after C++ changes; from pkg/<x>, just that package
+test = "pytest {args:pkg/*/tests}"
+
+# procure fetches third-party sources into depot/. It lives apart because it must run
+# before anything is built, and creating an environment with crunge members builds them.
+[tool.hatch.envs.depot]
+workspace.members = ["../procure"]
+dependencies = []
+scripts.fetch = "procure {args}"
+
+[[tool.hatch.envs.pkg.matrix]]
+name = ["attacus"]
+
+[tool.hatch.envs.pkg]
+workspace.members = ["pkg/{matrix:name}", "../cxbuild", "../cxbind"]
+scripts.test = "pytest pkg/{matrix:name}/tests {args}"
+
+[tool.uv]
+# The crunge packages build inside the hatch environment, where cxbuild, cxbind and
+# pybind11 are installed; everything else builds in isolation as usual.
+no-build-isolation-package = [
+  "attacus"
+]

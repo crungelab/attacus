@@ -21,11 +21,9 @@ installer = "uv"
 workspace.members = [
   # Build toolchain
   "../../../cxbuild",
-  # Generation toolchain (cxbuild requirement)
-  "../../../cxbind",
 
   # Attacus package
-  "../..",
+  "../../attacus",
 ]
 dependencies = ["uv", "pytest", "mypy"]
 
